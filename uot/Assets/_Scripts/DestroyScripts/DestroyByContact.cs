@@ -45,14 +45,14 @@ public class DestroyByContact : MonoBehaviour {
 			Instantiate (explosion, transform.position, transform.rotation);
 			gameController.spawnRupee (transform.position, other.transform.rotation);
 		}
+		// explosion for the missle and the spawning of the explosion collider
 		if (other.tag == "Missile") {
 			Instantiate (MissileDamage, other.transform.position, other.transform.rotation);
+			Instantiate (explosion, transform.position, transform.rotation);
 			Instantiate (missileExplosion, other.transform.position, other.transform.rotation);
 			Destroy(other.gameObject);
 		}
-		if (other.tag == "SplashDamage") {
-			Instantiate (explosion, transform.position, transform.rotation);
-		}
+
 		//explosion for ramming the asteroid
 		if (other.tag == "Player") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
