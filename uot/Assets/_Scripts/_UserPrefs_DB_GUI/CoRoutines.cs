@@ -240,7 +240,7 @@ public class CoRoutines : MonoBehaviour {
 
 		yield return updateAccountWWW;
 		if (updateAccountWWW.error != null) {
-			Debug.LogError ("[ello]: Cannot connect to Update Account");
+			Debug.Log ("[ello]: Cannot connect to Update Account");
 		} else {
 			string updateAccountReturn = updateAccountWWW.text;
 			print (updateAccountReturn);
