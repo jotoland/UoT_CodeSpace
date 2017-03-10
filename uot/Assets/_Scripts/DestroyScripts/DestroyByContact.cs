@@ -21,6 +21,7 @@ public class DestroyByContact : MonoBehaviour {
 	public GameObject missileExplosion;
 	public GameObject MissileDamage;
 	private GameController gameController;	//reference to instance of gamecontroller
+	public bool deadPlayer = false;
 
 
 	void Start () {
@@ -36,7 +37,8 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("EnemySpider"))
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart")
 		{
 			return;
 		}
@@ -56,14 +58,19 @@ public class DestroyByContact : MonoBehaviour {
 		//explosion for ramming the asteroid
 		if (other.tag == "Player") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
-			gameController.GameOver ();
+			if (gameController.lives == 1) {
+				gameController.AddLife (-1);
+				gameController.GameOver ();
+			} else {
+				///loss of one life
+				gameController.AddLife (-1);
+			}
+			deadPlayer = true;
+			gameController.playerDied = true;
+			Destroy (other.gameObject);
+
 		}
-		gameController.AddScore (scoreValue);	//call AddScore for reference controller
-
-		///does not matter which one to destroy first but this makes sense.
-
-		//other.transform.Translate(-10, -10, Time.deltaTime);
-		Destroy(other.gameObject);
+		gameController.AddScore (scoreValue);
 		Destroy(gameObject);
 	}
 
