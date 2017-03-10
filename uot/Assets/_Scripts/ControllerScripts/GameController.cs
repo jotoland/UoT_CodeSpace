@@ -76,6 +76,7 @@ public class GameController : MonoBehaviour {
 			//This coroutine is local to the GameController class. 
 			//This needs to wait one second while data is fetched from the DB,
 			//then the GetData Coroutine gets the items from the items array and places them respectively.
+			userNameText.text = "";
 			StartCoroutine ("GetData");
 		} else {
 			//Getting the currently loaded scene using the SceneManager.
@@ -98,7 +99,7 @@ public class GameController : MonoBehaviour {
 		beginBossWaveLvl_01 = false;
 		restartText.text = "";	
 		gameOverText.text = "";
-		userNameText.text = "";
+		
 
 		//Updating GUI for the foundational template useually all zeros but lifes is always 1.
 		UpdateScore ();	
@@ -118,14 +119,17 @@ public class GameController : MonoBehaviour {
 			StartCoroutine (SpawnWavesLevel_01 ());
 		} else if (currentScene.name == "Level_02") {
 			//Begin Hazard spawn level_02.
+			missileText.text = "";
 			StartCoroutine (SpawnWaves());
 			//StartCoroutine (SpawnWavesLevel_02 ());
 		} else if (currentScene.name == "Level_03") {
 			//Begin Hazard spawn level_03
+			missileText.text = "";
 			StartCoroutine (SpawnWaves());
 			//start your CoRoutine
 		} else if (currentScene.name == "Level_04") {
 			//Begin Hazard spawn level_04
+			missileText.text = "";
 			StartCoroutine (SpawnWaves());
 			//start your CoRoutine
 		}else if(currentScene.name == "Level_05"){
@@ -226,7 +230,7 @@ public class GameController : MonoBehaviour {
 				//beginBossWaveLevel_01 = true;
 				//break;
 				print (levelCount);
-				//levelCompleted ();
+				levelCompleted ();
 				yield return new WaitForSeconds (loadLevelWait);
 				print (levelCount);
 				SceneManager.LoadScene (levelCount);
