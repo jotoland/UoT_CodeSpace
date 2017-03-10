@@ -107,7 +107,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void spawnRupee(Vector3 position, Quaternion rotation){
-		Instantiate (rupeeBox[Random.Range (0, rupeeBox.Length)], position, rotation);
+		Instantiate (rupeeBox[0/*Random.Range (0, rupeeBox.Length)*/], position, rotation);
 	}
 
 	public void AddRupees(int newRupeeValue){
