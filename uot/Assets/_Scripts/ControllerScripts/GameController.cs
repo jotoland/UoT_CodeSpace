@@ -11,7 +11,7 @@ using UnityEngine;
 /// Controls the Hazard spawing in the game
 /// </summary>
 public class GameController : MonoBehaviour {
-
+	public int connection;
 	private CoRoutines CoRo;
 	public GameObject[] rupeeBox;
 	public GameObject[] shipList;
@@ -70,6 +70,20 @@ public class GameController : MonoBehaviour {
 			CoRo = CoRoObject.GetComponent <CoRoutines> ();
 		}
 
+		connection = PlayerPrefs.GetInt ("mConnection");
+
+		if (connection == 1) {
+			//This coroutine is local to the GameController class. 
+			//This needs to wait one second while data is fetched from the DB,
+			//then the GetData Coroutine gets the items from the items array and places them respectively.
+			StartCoroutine ("GetData");
+		} else {
+			//Getting the currently loaded scene using the SceneManager.
+			userName = PlayerPrefs.GetString ("mUserName");
+			userNameText.text = userName;
+			levelCount = levelCount + 1;
+		}
+
 		//Initialization of variables.
 		spawnWaveCount = 0;
 		loadLevelWait = 5;
@@ -95,10 +109,7 @@ public class GameController : MonoBehaviour {
 		//Getting the currently loaded scene using the SceneManager.
 		Scene currentScene = SceneManager.GetActiveScene();
 
-		//This coroutine is local to the GameController class. 
-		//This needs to wait one second while data is fetched from the DB,
-		//then the GetData Coroutine gets the items from the items array and places them respectively.
-		StartCoroutine ("GetData");
+
 
 		///Check the name of the currently loaded scene.
 		if (currentScene.name == "Level_01") {
