@@ -19,7 +19,7 @@ public class ShipSelection : MonoBehaviour {
 	public int lvlOne = 1;
 	//CoRo instance
 	public CoRoutines CoRo;
-	public int connection;
+	private int connection;
 
 	// Use this for initialization
 	void Start () {
@@ -45,11 +45,12 @@ public class ShipSelection : MonoBehaviour {
 		}
 		//get data from the data base used in the level scenes
 		//necessary for here instead of writing another script that is very similar
-		if (connection == 1) {
+		//Getting the currently loaded scene using the SceneManager.
+		Scene currentScene = SceneManager.GetActiveScene ();
+		if (connection == 1 && currentScene.name != "PlayerSelection") {
 			CoRo.GetData (shipList, index, userName);
 		} else {
-			//Getting the currently loaded scene using the SceneManager.
-			Scene currentScene = SceneManager.GetActiveScene ();
+			
 			if (currentScene.name == "PlayerSelection") {
 				shipList [index].SetActive (true);
 			} else {

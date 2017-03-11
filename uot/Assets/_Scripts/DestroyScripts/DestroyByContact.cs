@@ -21,7 +21,8 @@ public class DestroyByContact : MonoBehaviour {
 	public GameObject missileExplosion;
 	public GameObject MissileDamage;
 	private GameController gameController;	//reference to instance of gamecontroller
-
+	private Levels lvl;
+	public bool deadPlayer = false;
 
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -31,20 +32,35 @@ public class DestroyByContact : MonoBehaviour {
 		if (gameControllerObject == null) {
 			Debug.Log ("Cannot find 'GameController' script");	//in the case there is no reference object
 		}
+		GameObject lvlObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
+		if (lvlObject != null) {
+			lvl = gameControllerObject.GetComponent <Levels>();	//set reference to game controller component
+		}
 	}
 
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("EnemySpider"))
+
+
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy"))
+
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart")
+
+
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp")
+
 		{
 			return;
 		}
 		//creating explosion for asteroids being shot
 		if (explosion != null) {
 			Instantiate (explosion, transform.position, transform.rotation);
-			gameController.spawnRupee (transform.position, other.transform.rotation);
+			lvl.spawnRupee (transform.position, other.transform.rotation);
 		}
+
 		// explosion for the missle and the spawning of the explosion collider
 		if (other.tag == "Missile") {
 			Instantiate (MissileDamage, other.transform.position, other.transform.rotation);
@@ -56,14 +72,19 @@ public class DestroyByContact : MonoBehaviour {
 		//explosion for ramming the asteroid
 		if (other.tag == "Player") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
-			gameController.GameOver ();
+			if (gameController.getLivesCount() == 1) {
+				gameController.AddLife (-1);
+				gameController.GameOver ();
+			} else {
+				///loss of one life
+				gameController.AddLife (-1);
+			}
+			deadPlayer = true;
+			gameController.setPlayerDead (true);
+			Destroy (other.gameObject);
+
 		}
-		gameController.AddScore (scoreValue);	//call AddScore for reference controller
-
-		///does not matter which one to destroy first but this makes sense.
-
-		//other.transform.Translate(-10, -10, Time.deltaTime);
-		Destroy(other.gameObject);
+		gameController.AddScore (scoreValue);
 		Destroy(gameObject);
 	}
 

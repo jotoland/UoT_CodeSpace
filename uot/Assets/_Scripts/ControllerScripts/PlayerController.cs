@@ -17,9 +17,8 @@ public class PlayerController : MonoBehaviour {
 	public float tilt;
 	public float speed;
 	public Boundary boundary;
-	
 	public GameObject shot;
-	public Transform shotSpawn;
+	public Transform[] shotSpawns;
 	public float fireRate;
 	public GameObject missile;
 	public Transform missileSpawn;
@@ -28,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 	private float nextFire;
 	private float nextMissile;
 	private int missileShot = -1;
-
+	public int numberOfSpawns;
 
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -38,14 +37,68 @@ public class PlayerController : MonoBehaviour {
 		if (gameControllerObject == null) {
 			Debug.Log ("Cannot find 'GameController' script");	//in the case there is no reference object
 		}
+		numberOfSpawns = 0;
 	}
+
+	public void addShotSpawn(){
+
+		if (numberOfSpawns < 6) {
+			numberOfSpawns++;
+			print ("number of SPawns = " + numberOfSpawns);
+		}
+	}
+
 	void Update ()
 	{
 		//if mouse button is pressed instantiate the bolt and play shooting sound
 		if (Input.GetButton("Fire1") && Time.time > nextFire) 
 		{
 			nextFire = Time.time + fireRate;
-			Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+			switch (numberOfSpawns) {
+			case 1:
+				Instantiate (shot, shotSpawns[0].position, shotSpawns[0].rotation);
+				Instantiate (shot, shotSpawns[1].position, shotSpawns[1].rotation);
+				break;
+			case 2:
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
+				Instantiate (shot, shotSpawns [1].position, shotSpawns [1].rotation);
+				Instantiate (shot, shotSpawns [2].position, shotSpawns [2].rotation);
+				break;
+			case 3:
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
+				Instantiate (shot, shotSpawns [1].position, shotSpawns [1].rotation);
+				Instantiate (shot, shotSpawns [2].position, shotSpawns [2].rotation);
+				Instantiate (shot, shotSpawns [3].position, shotSpawns [3].rotation);
+				break;
+			case 4:
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
+				Instantiate (shot, shotSpawns [1].position, shotSpawns [1].rotation);
+				Instantiate (shot, shotSpawns [2].position, shotSpawns [2].rotation);
+				Instantiate (shot, shotSpawns [3].position, shotSpawns [3].rotation);
+				Instantiate (shot, shotSpawns [4].position, shotSpawns [4].rotation);
+				break;
+			case 5:
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
+				Instantiate (shot, shotSpawns [1].position, shotSpawns [1].rotation);
+				Instantiate (shot, shotSpawns [2].position, shotSpawns [2].rotation);
+				Instantiate (shot, shotSpawns [3].position, shotSpawns [3].rotation);
+				Instantiate (shot, shotSpawns [4].position, shotSpawns [4].rotation);
+				Instantiate (shot, shotSpawns [5].position, shotSpawns [4].rotation);
+				break;
+			case 6:
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
+				Instantiate (shot, shotSpawns [1].position, shotSpawns [1].rotation);
+				Instantiate (shot, shotSpawns [2].position, shotSpawns [2].rotation);
+				Instantiate (shot, shotSpawns [3].position, shotSpawns [3].rotation);
+				Instantiate (shot, shotSpawns [4].position, shotSpawns [4].rotation);
+				Instantiate (shot, shotSpawns [5].position, shotSpawns [4].rotation);
+				Instantiate (shot, shotSpawns [6].position, shotSpawns [4].rotation);
+				break;
+			default:
+				Instantiate (shot, shotSpawns[0].position, shotSpawns[0].rotation);
+				break;
+			}	
+
 			GetComponent<AudioSource>().Play ();
 		}
 		if (Input.GetButton("Fire2") && Time.time > nextMissile) 
@@ -53,7 +106,7 @@ public class PlayerController : MonoBehaviour {
 			nextMissile = Time.time + MissileCooldown;
 
 			//if the user has no missiles then cant fire missiles
-			if (gameController.missileCount == 0) {
+			if (gameController.getMissleCount() == 0) {
 				return;
 			} else {
 				Instantiate(missile, missileSpawn.position, missileSpawn.rotation);
