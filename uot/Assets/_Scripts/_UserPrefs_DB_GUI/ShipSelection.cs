@@ -19,7 +19,7 @@ public class ShipSelection : MonoBehaviour {
 	public int lvlOne = 1;
 	//CoRo instance
 	public CoRoutines CoRo;
-	public int connection;
+	private int connection;
 
 	// Use this for initialization
 	void Start () {

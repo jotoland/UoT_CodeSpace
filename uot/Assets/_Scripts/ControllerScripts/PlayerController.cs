@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour {
 	public float tilt;
 	public float speed;
 	public Boundary boundary;
-	
 	public GameObject shot;
 	public Transform[] shotSpawns;
 	public float fireRate;
@@ -29,7 +28,6 @@ public class PlayerController : MonoBehaviour {
 	private float nextMissile;
 	private int missileShot = -1;
 	public int numberOfSpawns;
-
 
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -108,7 +106,7 @@ public class PlayerController : MonoBehaviour {
 			nextMissile = Time.time + MissileCooldown;
 
 			//if the user has no missiles then cant fire missiles
-			if (gameController.missileCount == 0) {
+			if (gameController.getMissleCount() == 0) {
 				return;
 			} else {
 				Instantiate(missile, missileSpawn.position, missileSpawn.rotation);
