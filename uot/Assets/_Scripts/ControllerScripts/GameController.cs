@@ -133,6 +133,7 @@ public class GameController : MonoBehaviour {
 			StartCoroutine (SpawnWaves());
 			//start your CoRoutine
 		}else if(currentScene.name == "Level_05"){
+			StartCoroutine (SpawnWaves());
 			//Begin Hazard spawn level_05
 			//Start  your CoRoutine
 		}

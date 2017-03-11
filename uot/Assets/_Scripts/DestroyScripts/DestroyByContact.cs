@@ -38,7 +38,7 @@ public class DestroyByContact : MonoBehaviour {
 	{
 		///do not destroy if its inside the boundary
 		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
-			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart")
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp")
 		{
 			return;
 		}
