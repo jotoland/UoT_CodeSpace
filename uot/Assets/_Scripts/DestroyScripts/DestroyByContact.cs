@@ -37,12 +37,17 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
+<<<<<<< HEAD
 
 		if (other.CompareTag("Boundary") || other.CompareTag("Enemy"))
 
 		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
 			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart")
 
+=======
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp")
+>>>>>>> DevelopmentBranch
 		{
 			return;
 		}
