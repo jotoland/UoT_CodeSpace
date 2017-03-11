@@ -10,10 +10,11 @@ using UnityEngine;
  * 
 */
 public class PickUpScript : MonoBehaviour {
+	private int MissilePickUp = 1;
 
 	//instances of other classes
 	private GameController gameController;
-
+	private PlayerController playerController;	
 
 
 	//public to make each pick up behave in a unique way
@@ -24,6 +25,7 @@ public class PickUpScript : MonoBehaviour {
 
 	//values for rupees
 	public int rupeeValue;
+	private int heartValue;
 
 
 	//rotating variables
@@ -48,15 +50,18 @@ public class PickUpScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-
+		//heart values are set in stone
+		heartValue = 1;
 		///checking that we can access the instances of the other classes
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-
+		GameObject playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
 		//leave as seperate if statements
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();
 		}
-
+		if (playerControllerObject != null) {														
+			playerController = playerControllerObject.GetComponent <PlayerController>();			
+		}
 		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
 
@@ -64,15 +69,31 @@ public class PickUpScript : MonoBehaviour {
 	public void OnTriggerEnter(Collider other){
 		//if the other object (not the one the script is on) is the player then let the player pick it up!
 		if (other.tag == "Player") {
-			AudioSource.PlayClipAtPoint (GetComponent<AudioSource>().clip, other.transform.position);
+			if (isScaling) {
+				isScaling = false;
+			}
+			GetComponent<AudioSource>().Play ();
+			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
+
 			//if it is tagged RUPEE then do this
 			if (gameObject.tag == "Rupee") {
 				//update GUI with rupee count
 				gameController.AddRupees (rupeeValue);
+			} else if (gameObject.tag == "PowerStar") {									
+				//instantiate another shotspawn											
+				playerController.addShotSpawn ();										
+			} else if (gameObject.tag == "OneUpHeart") {
+				//udpate GUI with current life count
+				gameController.AddLife (heartValue);
+			} else if (gameObject.tag == "PickUp") {
+				gameController.AddMissiles (MissilePickUp);
 			}
-			Destroy (gameObject);
+
+			Object.Destroy (gameObject, 3f);
+
 		}
 	}
+
 
 	// Update is called once per frame (this is where the animation takes place)
 	void Update () {
@@ -110,4 +131,6 @@ public class PickUpScript : MonoBehaviour {
 			}
 		}
 	}
+
+
 }
