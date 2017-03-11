@@ -50,6 +50,7 @@ public class Levels : MonoBehaviour {
 	public bool checkPlayerProgressInLvl(bool isRegularWave){
 		if (isRegularWave) {
 			spawnWaveCount++;
+			print ("wave count = " + spawnWaveCount);
 			if (gc.isGameOver ()) {
 				gc.setRestart (true);
 				return false;
@@ -66,11 +67,12 @@ public class Levels : MonoBehaviour {
 			}
 		} else {
 			spawnWaveCount++;
+			print ("wave count = " + spawnWaveCount);
 			if (gc.isGameOver ()) {
 				gc.setRestart (true);
 				return false;
 			} else if (gc.isPlayerDead ()) {
-				spawnWaveCount = 0;
+				spawnWaveCount = numOfWavesInLvl;
 				gc.ReSpawn ();
 				gc.setPlayerDead (false);
 				return true;
@@ -147,11 +149,12 @@ public class Levels : MonoBehaviour {
 				yield return new WaitForSeconds (0.1f);
 			}
 			yield return new WaitForSeconds (waveWait);
-			spawnWaveCount++;
+			//spawnWaveCount++;
+			print ("wave count inside bosswave = " + spawnWaveCount);
 			if (!checkPlayerProgressInLvl (false)) {
 				break;
 			}
-			if(spawnWaveCount == numOfWavesInLvl+2 && !gc.isGameOver()) {
+			if(spawnWaveCount == numOfWavesInLvl+1 && !gc.isGameOver()) {
 				gc.levelCompleted ();
 				yield return new WaitForSeconds (gc.getLoadLvlWait());
 				if (gc.getLvlCount () >= 5) {

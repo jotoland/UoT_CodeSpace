@@ -375,6 +375,7 @@ public class GameController : MonoBehaviour {
 		print ("level Count = " + levelCount);
 		if (levelCount == 5) {
 			levelCount = -1;
+
 		}
 		CoRo.UpdateData (userName, levelCount+1, "lvl");
 		print ("level Count = " + levelCount);
