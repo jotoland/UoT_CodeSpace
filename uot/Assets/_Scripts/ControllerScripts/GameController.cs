@@ -11,31 +11,14 @@ using UnityEngine;
 /// Controls the Hazard spawing in the game
 /// </summary>
 public class GameController : MonoBehaviour {
-	public int connection;
+	private int connection;
 	private CoRoutines CoRo;
-	public GameObject[] rupeeBox;
+	private Levels lvl;
 	public GameObject[] shipList;
 	public Transform spawnPlayer;
-	//level variables
-	private int spawnWaveCount;
 	private int loadLevelWait;
 	private int levelCount;
-	public int numOfWavesInLvl;
-	private bool beginBossWaveLvl_01;
-
-	//reference to our hazard
-	public GameObject[] hazards;
-	///postion to spawn waves
-	public Vector3 spawnValues;
-	//count for loop
-	public int hazardCount;
-	//holds wait time between each spawn
-	public float spawnWait;
-	//time before game starts
-	public float startWait;
-	//time before each wave
-	public float waveWait;
-	public bool playerDied;
+	private bool playerDied;
 
 	//GUI HUD text variables
 	public GUIText scoreText;	//score text 
@@ -47,14 +30,13 @@ public class GameController : MonoBehaviour {
 	public GUIText missileText;//game over text
 
 	//Game Progress variables
-	public string userName;
+	private string userName;
 	private bool gameOver;		//game over flag
 	private bool restart;		//restart flag
-	public int score;			//score value 	/made public for testing only J.T.	
-	public int missileCount;
-	public int lives;
-	public int rupee;
-	public int rupees;
+	private int score;			//score value 	/made public for testing only J.T.	
+	private int missileCount;
+	private int lives;
+	private int rupees;
 
 	//Variables used to update the DB.
 	private int rupeeUpdateInterval;
@@ -69,7 +51,10 @@ public class GameController : MonoBehaviour {
 		if (CoRoObject != null) {
 			CoRo = CoRoObject.GetComponent <CoRoutines> ();
 		}
-
+		GameObject lvlObject = GameObject.FindGameObjectWithTag ("GameController");
+		if (CoRoObject != null) {
+			lvl = lvlObject.GetComponent <Levels> ();
+		}
 		connection = PlayerPrefs.GetInt ("mConnection");
 
 		if (connection == 1) {
@@ -86,7 +71,6 @@ public class GameController : MonoBehaviour {
 		}
 
 		//Initialization of variables.
-		spawnWaveCount = 0;
 		loadLevelWait = 5;
 		missileCount = 0;
 		scoreUpdateInterval = 0;
@@ -96,43 +80,39 @@ public class GameController : MonoBehaviour {
 		playerDied = false;
 		gameOver = false;		
 		restart = false;
-		beginBossWaveLvl_01 = false;
 		restartText.text = "";	
 		gameOverText.text = "";
-		
 
 		//Updating GUI for the foundational template useually all zeros but lifes is always 1.
 		UpdateScore ();	
 		UpdateLife ();
 		UpdateRupees();
 
-
 		//Getting the currently loaded scene using the SceneManager.
 		Scene currentScene = SceneManager.GetActiveScene();
-
-
 
 		///Check the name of the currently loaded scene.
 		if (currentScene.name == "Level_01") {
 			//Begin Hazard spawn level_01.
 			missileText.text = "";
-			StartCoroutine (SpawnWavesLevel_01 ());
+			lvl.StartLvlOne ();
 		} else if (currentScene.name == "Level_02") {
 			//Begin Hazard spawn level_02.
 			missileText.text = "";
-			StartCoroutine (SpawnWaves());
+			lvl.StartGenericLvl ();
 			//StartCoroutine (SpawnWavesLevel_02 ());
 		} else if (currentScene.name == "Level_03") {
 			//Begin Hazard spawn level_03
 			missileText.text = "";
-			StartCoroutine (SpawnWaves());
+			lvl.StartGenericLvl ();
 			//start your CoRoutine
 		} else if (currentScene.name == "Level_04") {
 			//Begin Hazard spawn level_04
 			missileText.text = "";
-			StartCoroutine (SpawnWaves());
+			lvl.StartGenericLvl ();
 			//start your CoRoutine
 		}else if(currentScene.name == "Level_05"){
+			lvl.StartGenericLvl ();
 			//Begin Hazard spawn level_05
 			//Start  your CoRoutine
 		}
@@ -140,9 +120,10 @@ public class GameController : MonoBehaviour {
 
 	/// getting the users score from items array no DB interaction but still waits for 1 second for DB interaction with CoRo
 	IEnumerator GetData(){
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(3f);
 		userName = (CoRo.items[1]);
 		levelCount = int.Parse (CoRo.items [2]);
+		print ("inside get data" + levelCount);
 		score = int.Parse (CoRo.items [4]);
 		rupees = int.Parse (CoRo.items [5]);
 		lives = int.Parse (CoRo.items [6]);
@@ -163,13 +144,60 @@ public class GameController : MonoBehaviour {
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);	//reload scene
 			}
 		}
-		///spawning the boss wave for level_01
+/*		///spawning the boss wave for level_01
 		if (beginBossWaveLvl_01) {
 			StartCoroutine (SpawnBossWaveLevel_01 ());
 			beginBossWaveLvl_01 = false;
 		}
+*/
 	}
 
+	public void setGameOverText(bool show){
+		if (show) {
+			print ("level count = " + levelCount);
+			gameOverText.text = "Level " + (levelCount);
+		} else {
+			gameOverText.text = "";
+		}
+	}
+
+	public bool isGameOver(){
+		return gameOver;
+	}
+
+	public bool isPlayerDead(){
+		return playerDied;
+	}
+
+	public void setRestart(bool set){
+		restartText.text = "Press 'R' for Restart";
+		restart = set;
+	}
+
+	public void setPlayerDead(bool set){
+		playerDied = set;
+	}
+
+	public int getLvlCount(){
+		return levelCount;
+	}
+
+	public void resetLvlCount(){
+		levelCount = 0;
+	}
+
+	public int getLoadLvlWait(){
+		return loadLevelWait;
+	}
+
+	public int getMissleCount(){
+		return missileCount;
+	}
+
+	public int getLivesCount(){
+		return lives;
+	}
+/*
 	/// Spawns the waves.
 	/// <returns>The enemy waves.</returns>
 	IEnumerator SpawnWavesLevel_01 (){
@@ -237,8 +265,9 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
+*/
 
-		
+/*
 	//function to spawn waves of hazards
 	IEnumerator SpawnWaves(){
 		yield return new WaitForSeconds (startWait);
@@ -258,14 +287,18 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
+*/
 
-	void ReSpawn(){
+	public void ReSpawn(){
+		print (CoRo.items [3]);
 		Instantiate (shipList[int.Parse(CoRo.items[3])], spawnPlayer.position, spawnPlayer.rotation);
 	}
 
+/*
 	public void spawnRupee(Vector3 position, Quaternion rotation){
 		Instantiate (rupeeBox[Random.Range (0, rupeeBox.Length)], position, rotation);
 	}
+*/
 
 	//function to update score, taking a score value as an argument
 	public void AddScore (int newScoreValue) {
@@ -339,9 +372,13 @@ public class GameController : MonoBehaviour {
 	//level completion preperation for next level or application exit
 	public void levelCompleted(){
 		gameOverText.text = "Victory!";
-		levelCount = levelCount+2;
-		//print ("level Count = " + levelCount);
-		CoRo.UpdateData (userName, levelCount, "lvl");
+		print ("level Count = " + levelCount);
+		if (levelCount == 5) {
+			levelCount = -1;
+
+		}
+		CoRo.UpdateData (userName, levelCount+1, "lvl");
+		print ("level Count = " + levelCount);
 		CoRo.UpdateData (userName, lives, "liv");
 		CoRo.UpdateData (userName, score, "pts");
 		CoRo.UpdateData (userName, rupees, "rup");
