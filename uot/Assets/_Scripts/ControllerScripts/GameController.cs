@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
@@ -159,12 +159,17 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void ReSpawn(){
-		print (CoRo.items [3]);
+		//print (CoRo.items [3]);
 		//just for level_01!!!
 		if (currentScene.name == "Level_01") {
-			print ("setting the spawnposition active");
-			Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
-			Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+			if (connection == 1) {
+				print ("setting the spawnposition active");
+				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
+				Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+			} else {
+				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
+				Instantiate (shipList [PlayerPrefs.GetInt ("mShip")], spawnPlayer.position, spawnPlayer.rotation);
+			}
 			GameObject pcObject = GameObject.FindGameObjectWithTag ("Player");
 			if (pcObject != null) {
 				pc = pcObject.GetComponent <PlayerController> ();

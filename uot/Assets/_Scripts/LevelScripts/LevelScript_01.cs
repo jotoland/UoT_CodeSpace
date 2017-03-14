@@ -40,6 +40,7 @@ public class LevelScript_01 : MonoBehaviour {
 	private bool WAITING_4BEATDROP;
 	private bool NEED_RESPAWN;
 	private bool SPAWN_POWERUP;
+	private bool NEED_NEW_LVL;
 	public float synthBpm;
 	public float snareBpm;
 	public float HHBpm;
@@ -49,6 +50,8 @@ public class LevelScript_01 : MonoBehaviour {
 	public float SSBpm;
 	private int rythmnCount;
 	private float lastTime, deltaTime, timer;
+
+	private AudioSource song;
 	#endregion
 
 	// Use this for initialization
@@ -67,6 +70,7 @@ public class LevelScript_01 : MonoBehaviour {
 		WAITING_4BEATDROP = true;
 		NEED_RESPAWN = true;
 		SPAWN_POWERUP = true;
+		NEED_NEW_LVL = true;
 
 		#endregion
 
@@ -75,13 +79,15 @@ public class LevelScript_01 : MonoBehaviour {
 		if (gcObject != null) {
 			gc = gcObject.GetComponent <GameController> ();
 		}
+		song = GetComponent<AudioSource> ();
+
 	}
 
 	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update () {
 		#region Level_01 use of Update()
 		//LEVEL_01 Only!!
-		if (gc.isPlayerDead () && NEED_RESPAWN) {
+		if (gc.isPlayerDead () && NEED_RESPAWN && !gc.isGameOver()) {
 			StartCoroutine(ReSpawnLvl_01());
 
 		}
@@ -117,6 +123,11 @@ public class LevelScript_01 : MonoBehaviour {
 			RESTART_THE_BEAT = false;
 			StartCoroutine (SpawnSynthWavesLevel_01 ());
 		}
+		if(!song.isPlaying && !gc.isGameOver() && NEED_NEW_LVL) {
+			NEED_NEW_LVL = false;
+			StartCoroutine(LoadNewLvl());
+
+		}
 		#endregion
 	}
 
@@ -129,6 +140,17 @@ public class LevelScript_01 : MonoBehaviour {
 		StartCoroutine (SpawnSynthWavesLevel_01 ());
 	}
 	#endregion
+
+	IEnumerator LoadNewLvl(){
+		gc.levelCompleted ();
+		yield return new WaitForSeconds (gc.getLoadLvlWait());
+		//if (gc.getLvlCount () >= 5) {
+		//gc.resetLvlCount ();
+		//SceneManager.LoadScene (gc.getLvlCount ());
+		//} else {
+		SceneManager.LoadScene (gc.getLvlCount()+2);
+		//}
+	}
 
 	IEnumerator ReSpawnLvl_01(){
 		NEED_RESPAWN = false;
@@ -221,16 +243,7 @@ public class LevelScript_01 : MonoBehaviour {
 			yield return new WaitForSeconds (0);
 			if (!checkPlayerProgressInLvl (true)) {
 				print (" inside Synth = " + spawnWaveCount);
-				if(spawnWaveCount == 207 && !gc.isGameOver()) {
-					gc.levelCompleted ();
-					yield return new WaitForSeconds (gc.getLoadLvlWait());
-					//if (gc.getLvlCount () >= 5) {
-					//gc.resetLvlCount ();
-					//SceneManager.LoadScene (gc.getLvlCount ());
-					//} else {
-					SceneManager.LoadScene (gc.getLvlCount()+2);
-					//}
-				}
+
 				break;
 			}
 			rythmnCount++;
