@@ -46,6 +46,7 @@ public class PickUpScript : MonoBehaviour {
 	public float scaleSpeed;
 	public float scaleRate;
 	private float scaleTimer;
+	private GameObject playerControllerObject;
 
 	// Use this for initialization
 	void Start () {
@@ -54,7 +55,7 @@ public class PickUpScript : MonoBehaviour {
 		heartValue = 1;
 		///checking that we can access the instances of the other classes
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-		GameObject playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
+		playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
 		//leave as seperate if statements
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();
@@ -128,6 +129,12 @@ public class PickUpScript : MonoBehaviour {
 					else if (!scalingUp) { scalingUp = true; }
 					scaleTimer = 0;
 				}
+			}
+		}
+		if (playerControllerObject == null) {
+			playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
+			if (playerControllerObject != null) {														
+				playerController = playerControllerObject.GetComponent <PlayerController>();			
 			}
 		}
 	}
