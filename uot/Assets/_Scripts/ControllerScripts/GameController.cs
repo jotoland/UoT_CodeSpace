@@ -162,22 +162,32 @@ public class GameController : MonoBehaviour {
 		//print (CoRo.items [3]);
 		//just for level_01!!!
 		if (currentScene.name == "Level_01") {
-			if (connection == 1) {
-				print ("setting the spawnposition active");
-				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
-				Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
-			} else {
+			switch (connection) {
+			case 0:
 				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
 				Instantiate (shipList [PlayerPrefs.GetInt ("mShip")], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			case 1:
+				//print ("setting the spawnposition active");
+				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
+				Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+				break;
 			}
 			GameObject pcObject = GameObject.FindGameObjectWithTag ("Player");
 			if (pcObject != null) {
 				pc = pcObject.GetComponent <PlayerController> ();
 			}
 			pc.startToggleCollider ();
-		} else {
 			//any other level respawn player!!!
-			Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+		} else {
+			switch (connection) {
+			case 0:
+				Instantiate (shipList [PlayerPrefs.GetInt ("mShip")], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			case 1:
+				Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			}
 		}
 	}
 

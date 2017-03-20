@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator toggleCollider(){
 		GetComponent<Collider> ().enabled = false;
-		yield return new WaitForSeconds (2f);
+		yield return new WaitForSeconds (3f);
 		GetComponent<Collider> ().enabled = true;
 	}
 		
