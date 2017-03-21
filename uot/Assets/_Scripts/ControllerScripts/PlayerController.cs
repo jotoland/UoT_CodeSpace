@@ -1,4 +1,5 @@
 //Richard O'Neal 2/17/2017
+//Nicholas Muirehad 3/9/2017
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,4 +84,13 @@ public class PlayerController : MonoBehaviour {
 		GetComponent<Rigidbody>().rotation = Quaternion.Euler (0.0f, 0.0f, GetComponent<Rigidbody>().velocity.x * -tilt);
 		
 	}
+    //adds an extra shot to the player
+   /* public void addShotSpawn()
+    {
+        if(numberOfSpawns < 6)
+        {
+            numberOfSpawns++;
+            print("number of Spawns = " + numberOfSpawns);
+        }
+    }*/
 }
