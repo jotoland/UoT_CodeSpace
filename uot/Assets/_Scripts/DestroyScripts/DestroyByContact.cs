@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// Destroy by contact.
-/// 
 /// 02/17/17 John G. Toland
 /// 02/20/17 Richard O'Neal
 /// used to destroy hazards with bolts or collisions
-/// 
+
+/// 03/20/2017 Andrew Salopek
+
 /// </summary>
-
-
-
 public class DestroyByContact : MonoBehaviour {
 
 	//reference to public explosion event
@@ -22,7 +20,6 @@ public class DestroyByContact : MonoBehaviour {
 	public GameObject MissileDamage;
 	private GameController gameController;	//reference to instance of gamecontroller
 	public bool deadPlayer = false;
-
 
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -37,18 +34,8 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
-
-
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy"))
-
 		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
-			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart")
-
-
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
-			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp")
-
-		{
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp"){
 			return;
 		}
 		//creating explosion for asteroids being shot
@@ -56,18 +43,21 @@ public class DestroyByContact : MonoBehaviour {
 			Instantiate (explosion, transform.position, transform.rotation);
 			gameController.spawnRupee (transform.position, other.transform.rotation);
 		}
-		// explosion for the missle and the spawning of the explosion collider
+
 		if (other.tag == "Missile") {
 			Instantiate (MissileDamage, other.transform.position, other.transform.rotation);
-			Instantiate (explosion, transform.position, transform.rotation);
 			Instantiate (missileExplosion, other.transform.position, other.transform.rotation);
 			Destroy(other.gameObject);
+		}
+
+		if (other.tag == "SplashDamage") {
+			Instantiate (explosion, transform.position, transform.rotation);
 		}
 
 		//explosion for ramming the asteroid
 		if (other.tag == "Player") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
-			if (gameController.lives == 1) {
+			if (gameController.getLivesCount() == 1) {
 				gameController.AddLife (-1);
 				gameController.GameOver ();
 			} else {
@@ -75,13 +65,20 @@ public class DestroyByContact : MonoBehaviour {
 				gameController.AddLife (-1);
 			}
 			deadPlayer = true;
-			gameController.playerDied = true;
+			gameController.setPlayerDead (true);
+			Destroy (other.gameObject);
+
+		}
+		if (other.tag == "WingMan") {
+			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
+			Instantiate (explosion, transform.position, transform.rotation);
+			Destroy (gameObject);
 			Destroy (other.gameObject);
 
 		}
 		gameController.AddScore (scoreValue);
 		Destroy(gameObject);
+		Destroy (other.gameObject);
 	}
-
-
 }
+//finito
