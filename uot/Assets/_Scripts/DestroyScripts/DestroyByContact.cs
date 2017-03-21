@@ -7,7 +7,10 @@ using UnityEngine;
 /// 02/20/17 Richard O'Neal
 /// used to destroy hazards with bolts or collisions
 <<<<<<< HEAD
+<<<<<<< HEAD
 /// 03/20/2017 Andrew Salopek
+=======
+>>>>>>> DevelopmentBranch
 =======
 >>>>>>> DevelopmentBranch
 /// </summary>
@@ -45,8 +48,11 @@ public class DestroyByContact : MonoBehaviour {
 			gameController.spawnRupee (transform.position, other.transform.rotation);
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
+=======
+>>>>>>> DevelopmentBranch
 		// explosion for the missle and the spawning of the explosion collider
 >>>>>>> DevelopmentBranch
 		if (other.tag == "Missile") {
@@ -55,9 +61,12 @@ public class DestroyByContact : MonoBehaviour {
 			Destroy(other.gameObject);
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (other.tag == "SplashDamage") {
 			Instantiate (explosion, transform.position, transform.rotation);
 		}
+=======
+>>>>>>> DevelopmentBranch
 =======
 >>>>>>> DevelopmentBranch
 		//explosion for ramming the asteroid
@@ -73,12 +82,15 @@ public class DestroyByContact : MonoBehaviour {
 			deadPlayer = true;
 			gameController.setPlayerDead (true);
 			Destroy (other.gameObject);
+<<<<<<< HEAD
 		}
 		if (other.tag == "WingMan") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
 			Instantiate (explosion, transform.position, transform.rotation);
 			Destroy (gameObject);
 			Destroy (other.gameObject);
+=======
+>>>>>>> DevelopmentBranch
 		}
 		gameController.AddScore (scoreValue);
 		Destroy(gameObject);
