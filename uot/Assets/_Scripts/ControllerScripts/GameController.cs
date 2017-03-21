@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
@@ -8,13 +8,20 @@ using UnityEngine;
 /// /// 02/17/17 John G. Toland
 /// /// 02/18/17 Dylan Salopek
 /// /// 02/20/17 Richard O'Neal
-/// Controls the Hazard spawing in the game
+/// Controls the game progress shared amoungst all levels.
+/// Starts the initial spawning off all levels.
+/// The actual methods t of wave spawning are in the Levels script.
+/// The gamecontroller only starts your level using an instance of the Levels Class.
 /// </summary>
 public class GameController : MonoBehaviour {
 	private int connection;
+	public Scene currentScene;
 	private CoRoutines CoRo;
+	private PlayerController pc;
 	private Levels lvl;
+	private LevelScript_01 lvl_01;
 	public GameObject[] shipList;
+	public GameObject[] rupeeBox;
 	public Transform spawnPlayer;
 	private int loadLevelWait;
 	private int levelCount;
@@ -55,6 +62,11 @@ public class GameController : MonoBehaviour {
 		if (CoRoObject != null) {
 			lvl = lvlObject.GetComponent <Levels> ();
 		}
+		GameObject lvl_01Object = GameObject.FindGameObjectWithTag ("GameController");
+		if (CoRoObject != null) {
+			lvl_01 = lvl_01Object.GetComponent <LevelScript_01> ();
+		}
+
 		connection = PlayerPrefs.GetInt ("mConnection");
 
 		if (connection == 1) {
@@ -89,13 +101,13 @@ public class GameController : MonoBehaviour {
 		UpdateRupees();
 
 		//Getting the currently loaded scene using the SceneManager.
-		Scene currentScene = SceneManager.GetActiveScene();
+		currentScene = SceneManager.GetActiveScene();
 
 		///Check the name of the currently loaded scene.
 		if (currentScene.name == "Level_01") {
 			//Begin Hazard spawn level_01.
 			missileText.text = "";
-			lvl.StartLvlOne ();
+			lvl_01.StartLvlOne ();
 		} else if (currentScene.name == "Level_02") {
 			//Begin Hazard spawn level_02.
 			missileText.text = "";
@@ -123,7 +135,7 @@ public class GameController : MonoBehaviour {
 		yield return new WaitForSeconds(3f);
 		userName = (CoRo.items[1]);
 		levelCount = int.Parse (CoRo.items [2]);
-		print ("inside get data" + levelCount);
+		//print ("inside get data, lvlCount = " + levelCount);
 		score = int.Parse (CoRo.items [4]);
 		rupees = int.Parse (CoRo.items [5]);
 		lives = int.Parse (CoRo.items [6]);
@@ -144,12 +156,43 @@ public class GameController : MonoBehaviour {
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);	//reload scene
 			}
 		}
-/*		///spawning the boss wave for level_01
-		if (beginBossWaveLvl_01) {
-			StartCoroutine (SpawnBossWaveLevel_01 ());
-			beginBossWaveLvl_01 = false;
+	}
+
+	public void ReSpawn(){
+		//print (CoRo.items [3]);
+		//just for level_01!!!
+		if (currentScene.name == "Level_01") {
+			switch (connection) {
+			case 0:
+				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
+				Instantiate (shipList [PlayerPrefs.GetInt ("mShip")], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			case 1:
+				//print ("setting the spawnposition active");
+				Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
+				Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			}
+			GameObject pcObject = GameObject.FindGameObjectWithTag ("Player");
+			if (pcObject != null) {
+				pc = pcObject.GetComponent <PlayerController> ();
+			}
+			pc.startToggleCollider ();
+			//any other level respawn player!!!
+		} else {
+			switch (connection) {
+			case 0:
+				Instantiate (shipList [PlayerPrefs.GetInt ("mShip")], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			case 1:
+				Instantiate (shipList [int.Parse (CoRo.items [3])], spawnPlayer.position, spawnPlayer.rotation);
+				break;
+			}
 		}
-*/
+	}
+
+	public void spawnRupee(Vector3 position, Quaternion rotation){
+		Instantiate (rupeeBox[Random.Range (0, rupeeBox.Length)], position, rotation);
 	}
 
 	public void setGameOverText(bool show){
@@ -197,109 +240,7 @@ public class GameController : MonoBehaviour {
 	public int getLivesCount(){
 		return lives;
 	}
-/*
-	/// Spawns the waves.
-	/// <returns>The enemy waves.</returns>
-	IEnumerator SpawnWavesLevel_01 (){
-		yield return new WaitForSeconds (1);
-		gameOverText.text = "Level " + (levelCount);
-		yield return new WaitForSeconds (startWait);
-		gameOverText.text = "";
-
-		while (true){
-			for (int i = 0; i < hazardCount; i++){
-				GameObject hazard = hazards [Random.Range (0, hazards.Length)];
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-				Quaternion spawnRotation = Quaternion.identity;
-				Instantiate (hazard, spawnPosition, spawnRotation);
-				yield return new WaitForSeconds (spawnWait);
-			}
-
-			yield return new WaitForSeconds (waveWait);
-			spawnWaveCount++;
-			if (gameOver) {
-				restartText.text = "Press 'R' for Restart";
-				restart = true;
-				break;
-			} else if (playerDied) {
-				spawnWaveCount = 0;
-				ReSpawn ();
-				playerDied = false;
-			} else if(spawnWaveCount == numOfWavesInLvl && !gameOver) {
-				beginBossWaveLvl_01 = true;
-				break;
-
-			}
-		}
-	}
-
-	IEnumerator SpawnBossWaveLevel_01(){
-		yield return new WaitForSeconds (startWait);
-		while (true){
-			for (int i = 0; i < 50; i++){
-				GameObject hazard = hazards [Random.Range (0, hazards.Length)];
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-				Quaternion spawnRotation = Quaternion.identity;
-				Instantiate (hazard, spawnPosition, spawnRotation);
-				yield return new WaitForSeconds (0.1f);
-			}
-
-			yield return new WaitForSeconds (waveWait);
-			spawnWaveCount++;
-			if (gameOver) {
-				restartText.text = "Press 'R' for Restart";
-				restart = true;
-				break;
-			} else if (playerDied) {
-				spawnWaveCount = 0;
-				ReSpawn ();
-				playerDied = false;
-			} else if(spawnWaveCount == numOfWavesInLvl+2 && !gameOver) {
-				//beginBossWaveLevel_01 = true;
-				//break;
-				print (levelCount);
-				levelCompleted ();
-				yield return new WaitForSeconds (loadLevelWait);
-				print (levelCount);
-				SceneManager.LoadScene (levelCount);
-			}
-		}
-	}
-*/
-
-/*
-	//function to spawn waves of hazards
-	IEnumerator SpawnWaves(){
-		yield return new WaitForSeconds (startWait);
-		while(true){
-			for(int i =0; i<hazardCount; i++){
-				GameObject hazard = hazards [Random.Range (0, hazards.Length)];//Picks random hazard from hazards array
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-				Quaternion spawnRotation = Quaternion.identity;
-				Instantiate (hazard, spawnPosition, spawnRotation);
-				yield return new WaitForSeconds (spawnWait);
-			}
-			yield return new WaitForSeconds (waveWait);
-			if (gameOver) {
-				restartText.text = "Press 'R' to Restart";	//set text when gameOver is true
-				restart = true;	//set flag to true
-				break;			//exit SpawnWaves coroutine
-			}
-		}
-	}
-*/
-
-	public void ReSpawn(){
-		print (CoRo.items [3]);
-		Instantiate (shipList[int.Parse(CoRo.items[3])], spawnPlayer.position, spawnPlayer.rotation);
-	}
-
-/*
-	public void spawnRupee(Vector3 position, Quaternion rotation){
-		Instantiate (rupeeBox[Random.Range (0, rupeeBox.Length)], position, rotation);
-	}
-*/
-
+		
 	//function to update score, taking a score value as an argument
 	public void AddScore (int newScoreValue) {
 		//updating local score
@@ -372,16 +313,17 @@ public class GameController : MonoBehaviour {
 	//level completion preperation for next level or application exit
 	public void levelCompleted(){
 		gameOverText.text = "Victory!";
-		print ("level Count = " + levelCount);
+		//print ("level Count = " + levelCount);
 		if (levelCount == 5) {
 			levelCount = -1;
 
 		}
 		CoRo.UpdateData (userName, levelCount+1, "lvl");
-		print ("level Count = " + levelCount);
+		//print ("level Count = " + levelCount);
 		CoRo.UpdateData (userName, lives, "liv");
 		CoRo.UpdateData (userName, score, "pts");
 		CoRo.UpdateData (userName, rupees, "rup");
 	}
 
 }
+//finito
