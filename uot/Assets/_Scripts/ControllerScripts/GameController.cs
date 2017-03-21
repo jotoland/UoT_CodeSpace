@@ -59,11 +59,12 @@ public class GameController : MonoBehaviour {
 			CoRo = CoRoObject.GetComponent <CoRoutines> ();
 		}
 		GameObject lvlObject = GameObject.FindGameObjectWithTag ("GameController");
-		if (CoRoObject != null) {
+		if (lvlObject != null) {
+			//print ("level scirpt assigned");
 			lvl = lvlObject.GetComponent <Levels> ();
 		}
 		GameObject lvl_01Object = GameObject.FindGameObjectWithTag ("GameController");
-		if (CoRoObject != null) {
+		if (lvl_01Object != null) {
 			lvl_01 = lvl_01Object.GetComponent <LevelScript_01> ();
 		}
 
