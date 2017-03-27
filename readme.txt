@@ -1,1 +1,1 @@
-My edit
+Universe of Things, is an arcade style game using 3D animations in a 2D environment. The plot  of the game is that you are a pilot (the player) in space traveling to a distant land. The journey takes you through a vast universe where you encounter different obstacles along the way. During your journey you fight off different space hazards and alien ships, which pose a threat to your survival. The game is not completed (won) until the player makes it to his/her home planet, which occurs after the completion of the final level.
