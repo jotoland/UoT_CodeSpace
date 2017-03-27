@@ -136,4 +136,16 @@ public class PlayerController : MonoBehaviour {
 		GetComponent<Rigidbody>().rotation = Quaternion.Euler (0.0f, 0.0f, GetComponent<Rigidbody>().velocity.x * -tilt);
 		
 	}
+
+	public void startToggleCollider(){
+		StartCoroutine (toggleCollider ());
+	}
+
+
+	IEnumerator toggleCollider(){
+		GetComponent<Collider> ().enabled = false;
+		yield return new WaitForSeconds (3f);
+		GetComponent<Collider> ().enabled = true;
+	}
+		
 }
