@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/// <summary>
+/// Levels.
+/// John G. Toland 3/10/17
+/// This script is intended to use amoungst all levels.
+/// This script controls the progress of the level.
+/// Seperating the progress of the level and the over all gamecontroller allows for 
+/// better readability. 
+/// The addition of this script also allows form making all variables in GameController private, 
+/// acessing these varibles are now done with getters and setters.
+/// </summary>
 public class Levels : MonoBehaviour {
-	
 	//all level variables
+	//Scene currentScene;
 	private GameController gc;
 	public GameObject[] hazards;
-	public GameObject[] rupeeBox;
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public float spawnWait;
@@ -16,46 +24,52 @@ public class Levels : MonoBehaviour {
 	public float waveWait;
 	public int numOfWavesInLvl;
 	private int spawnWaveCount;
+	private bool beginBossWaveGeneric;
 
-	//level_01 variables
-	private bool beginBossWaveLvl_01;
 
 	// Use this for initialization
 	void Start () {
+		//currentScene = SceneManager.GetActiveScene ();
+		//get instance of gameController for access to game progress fucntions within your level
 		GameObject gcObject = GameObject.FindGameObjectWithTag ("GameController");
 		if (gcObject != null) {
 			gc = gcObject.GetComponent <GameController> ();
 		}
 	}
 	
-	// Update is called once per frame
+	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update () {
 		///spawning the boss wave for level_01
-		if (beginBossWaveLvl_01) {
-			StartCoroutine (SpawnBossWaveLevel_01 ());
-			beginBossWaveLvl_01 = false;
+		if (beginBossWaveGeneric) {
+			StartCoroutine (SpawnBossWaveGeneric ());
+			beginBossWaveGeneric = false;
 		}
 	}
 
 #region methodsToStartCoroutines
-	public void StartLvlOne(){
-		StartCoroutine (SpawnWavesLevel_01 ());
-	}
-
+	/// <summary>
+	/// Starts the generic lvl Coroutine.
+	/// </summary>
 	public void StartGenericLvl(){
 		StartCoroutine (SpawnWaves ());
 	}
 #endregion
 
+	/// <summary>
+	/// Checks the player progress in lvl.
+	/// </summary>
+	/// <returns><c>true</c>, if player progress in lvl was checked, <c>false</c> otherwise.</returns>
+	/// <param name="isRegularWave">If set to <c>true</c> is regular wave.</param>
 	public bool checkPlayerProgressInLvl(bool isRegularWave){
 		if (isRegularWave) {
 			spawnWaveCount++;
 			print ("wave count = " + spawnWaveCount);
-			if (gc.isGameOver ()) {
+			 if (gc.isGameOver ()) {
 				gc.setRestart (true);
 				return false;
 			} else if (gc.isPlayerDead ()) {
-				spawnWaveCount = 0;
+					spawnWaveCount = 0;
+				print ("inside player is dead");
 				gc.ReSpawn ();
 				gc.setPlayerDead (false);
 				return true;
@@ -82,26 +96,30 @@ public class Levels : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Enterings the boss wave.
+	/// </summary>
+	/// <param name="lvlCount">Lvl count.</param>
 	public void enteringBossWave(int lvlCount){
 		switch (lvlCount) {
 		case 1:
-			beginBossWaveLvl_01 = true;
+			beginBossWaveGeneric = true;
 			break;
 		case 2:
 			//level 2 boss wave case
-			//beginBossWaveLvl_01 = true;						///used for testing
+			beginBossWaveGeneric = true;						///used for testing
 			break;
 		case 3:
 			//level 3 boss wave case
-			//beginBossWaveLvl_01 = true;						///used for testing
+			beginBossWaveGeneric = true;						///used for testing
 			break;
 		case 4:
 			//level 4 boss wave case
-			//beginBossWaveLvl_01 = true;						///used for testing
+			beginBossWaveGeneric = true;						///used for testing
 			break;
 		case 5:
 			//level 5 boss wave case
-			//beginBossWaveLvl_01 = true; 						///used for testing
+			beginBossWaveGeneric = true; 						///used for testing
 			break;
 		default:
 			//nothing to do here
@@ -109,22 +127,20 @@ public class Levels : MonoBehaviour {
 		}
 	}
 
-	/// spawns the rupees from the rupee box after a hazard has been destroyed
-	public void spawnRupee(Vector3 position, Quaternion rotation){
-		Instantiate (rupeeBox[Random.Range (0, rupeeBox.Length)], position, rotation);
-	}
-
-#region Level_01 waveSpawning
+#region GenericLvl waveSpawning
+	/// <summary>
 	/// Spawns the waves.
-	/// <returns>The enemy waves.</returns>
-	IEnumerator SpawnWavesLevel_01 (){
+	/// </summary>
+	/// <returns>The waves.</returns>
+	IEnumerator SpawnWaves(){
+		///we must wait for 3 seconds for the database to load and update the new information for each level.
 		yield return new WaitForSeconds (3f);
 		gc.setGameOverText (true);
 		yield return new WaitForSeconds (startWait);
 		gc.setGameOverText (false);
-		while (true){
-			for (int i = 0; i < hazardCount; i++){
-				GameObject hazard = hazards [Random.Range (0, hazards.Length)];
+		while(true){
+			for(int i =0; i<hazardCount; i++){
+				GameObject hazard = hazards [Random.Range (0, hazards.Length)];//Picks random hazard from hazards array
 				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
@@ -134,11 +150,14 @@ public class Levels : MonoBehaviour {
 			if(!checkPlayerProgressInLvl(true)){
 				break;
 			}
-
 		}
 	}
 
-	IEnumerator SpawnBossWaveLevel_01(){
+	/// <summary>
+	/// Spawns the boss wave level 01.
+	/// </summary>
+	/// <returns>The boss wave level 01.</returns>
+	IEnumerator SpawnBossWaveGeneric(){
 		yield return new WaitForSeconds (startWait);
 		while (true){
 			for (int i = 0; i < 50; i++){
@@ -166,29 +185,7 @@ public class Levels : MonoBehaviour {
 			}
 		}
 	}
-#endregion
 
-
-#region GenericLvl waveSpawning
-	//function to spawn waves of hazards
-	IEnumerator SpawnWaves(){
-		yield return new WaitForSeconds (3f);
-		gc.setGameOverText (true);
-		yield return new WaitForSeconds (startWait);
-		gc.setGameOverText (false);
-		while(true){
-			for(int i =0; i<hazardCount; i++){
-				GameObject hazard = hazards [Random.Range (0, hazards.Length)];//Picks random hazard from hazards array
-				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-				Quaternion spawnRotation = Quaternion.identity;
-				Instantiate (hazard, spawnPosition, spawnRotation);
-				yield return new WaitForSeconds (spawnWait);
-			}
-			yield return new WaitForSeconds (waveWait);
-			if(!checkPlayerProgressInLvl(true)){
-				break;
-			}
-		}
-	}
 #endregion
 }
+//finito
