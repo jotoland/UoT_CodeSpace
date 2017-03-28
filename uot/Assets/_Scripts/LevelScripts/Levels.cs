@@ -26,6 +26,7 @@ public class Levels : MonoBehaviour
     public int numOfWavesInLvl;
     private int spawnWaveCount;
     private bool beginBossWaveGeneric;
+	public int BossHazardCount;
 
 
     // Use this for initialization
@@ -190,7 +191,7 @@ public class Levels : MonoBehaviour
         yield return new WaitForSeconds(startWait);
         while (true)
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < BossHazardCount; i++)
             {
                 GameObject hazard = hazards[Random.Range(0, hazards.Length)];
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
