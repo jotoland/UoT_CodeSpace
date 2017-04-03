@@ -19,6 +19,10 @@ public class WingmenNavigation : MonoBehaviour {
 	void Update () {
 		if (m_Player) {
 			navMeshAgent.destination = m_Player.position;
+			GameObject enemy = GameObject.FindGameObjectWithTag ("Enemy");
+			if (enemy) {
+				navMeshAgent.destination = enemy.transform.position;
+			}
 		} else {
 			Instantiate (playerExplosion, gameObject.transform.position, gameObject.transform.rotation);
 			Destroy (gameObject);
