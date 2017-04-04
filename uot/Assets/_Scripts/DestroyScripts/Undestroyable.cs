@@ -17,6 +17,7 @@ public class Undestroyable : MonoBehaviour
     public GameObject playerExplosion;
     //instance of gamecontroller reference
     private GameController gameController;
+	public bool deadPlayer = false;
 
 
     void Start()
@@ -36,24 +37,28 @@ public class Undestroyable : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other)
-    {
-        ///object is only destroyed by leaving the boundary.
-        if (other.CompareTag("Boundary") || other.CompareTag("Enemy"))
-        {
-            return;
-        }
+	{
+		///object is only destroyed by leaving the boundary.
+		if (other.CompareTag ("Boundary") || other.CompareTag ("Enemy")) {
+			return;
+		}
 
 
-        //player explodes if touches the object
-        if (other.tag == "Player")
-        {
-            Instantiate(playerExplosion, other.transform.position, other.transform.rotation);
-            gameController.GameOver();
-        }
+		//player explodes if touches the object
+		if (other.tag == "Player") {
+			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
+			if (gameController.getLivesCount () == 1) {
+				gameController.AddLife (-1);
+				gameController.GameOver ();
+			} else {
+				///loss of one life
+				gameController.AddLife (-1);
+			}
+			deadPlayer = true;
+			gameController.setPlayerDead (true);
+			Destroy (other.gameObject);
 
-        Destroy(other.gameObject);
-
-    }
-
+		}
+	}
 
 }
