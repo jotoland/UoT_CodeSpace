@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour {
 	private PlayerController pc;
 	private Levels lvl;
 	private LevelScript_01 lvl_01;
+	private Levels05 lvl_05;
 	public GameObject[] shipList;
 	public GameObject[] rupeeBox;
 	public Transform spawnPlayer;
@@ -68,6 +69,11 @@ public class GameController : MonoBehaviour {
 		GameObject lvl_01Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_01Object != null) {
 			lvl_01 = lvl_01Object.GetComponent <LevelScript_01> ();
+		}
+		GameObject lvl_05Object = GameObject.FindGameObjectWithTag ("GameController");
+		if (lvl_05Object != null) {
+			//print ("level scirpt assigned");
+			lvl_05 = lvl_05Object.GetComponent <Levels05> ();
 		}
 
 		connection = PlayerPrefs.GetInt ("mConnection");
@@ -128,7 +134,7 @@ public class GameController : MonoBehaviour {
 			lvl.StartGenericLvl ();
 			//start your CoRoutine
 		}else if(currentScene.name == "Level_05"){
-			lvl.StartGenericLvl ();
+			lvl_05.StartLvlFive ();
 			//Begin Hazard spawn level_05
 			//Start  your CoRoutine
 		}
