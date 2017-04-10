@@ -17,15 +17,15 @@ public class WingmenNavigation : MonoBehaviour {
 //		m_Player = GameObject.FindGameObjectWithTag ("Player");
 		//wait ();
 		//InvokeRepeating ("Move", 0f, .01667f);
-		InvokeRepeating ("Move", 3f, .01667f);
+		InvokeRepeating ("Move", 5f, .0166667f);
 
 	}
 
-	IEnumerator wait () {
-		yield return new WaitForSeconds (3f);
-		InvokeRepeating ("Move", 0f, .01667f);
-
-	}
+//	IEnumerator wait () {
+//		yield return new WaitForSeconds (3f);
+//		InvokeRepeating ("Move", 0f, .01667f);
+//
+//	}
 
 	void Move () {
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
