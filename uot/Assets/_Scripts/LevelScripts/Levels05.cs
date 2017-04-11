@@ -20,6 +20,7 @@ public class Levels05 : MonoBehaviour
 	//Scene currentScene;
 	private GameController gc;
 	public GameObject[] hazards;
+	public GameObject FinalEnemy;
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public float spawnWait;
@@ -27,7 +28,7 @@ public class Levels05 : MonoBehaviour
 	public float waveWait;
 	public int numOfWavesInLvl;
 	private int spawnWaveCount;
-	private bool beginBossWaveGeneric;
+	private bool beginBossFight;
 	public int BossHazardCount;
 
 
@@ -46,11 +47,11 @@ public class Levels05 : MonoBehaviour
 	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update()
 	{
-		///spawning the boss wave for level_01
-		if (beginBossWaveGeneric)
+		///spawning the boss fight for level_05
+		if (beginBossFight)
 		{
-			StartCoroutine(SpawnBossWaveGeneric());
-			beginBossWaveGeneric = false;
+			StartCoroutine(SpawnBosslvl05());
+			beginBossFight = false;
 		}
 	}
 
@@ -130,23 +131,23 @@ public class Levels05 : MonoBehaviour
 		switch (lvlCount)
 		{
 		case 1:
-			beginBossWaveGeneric = true;
+			beginBossFight = true;
 			break;
 		case 2:
 			//level 2 boss wave case
-			beginBossWaveGeneric = true;                        ///used for testing
+			beginBossFight= true;                        ///used for testing
 			break;
 		case 3:
 			//level 3 boss wave case
-			beginBossWaveGeneric = true;                        ///used for testing
+			beginBossFight = true;                        ///used for testing
 			break;
 		case 4:
 			//level 4 boss wave case
-			beginBossWaveGeneric = true;                        ///used for testing
+			beginBossFight = true;                        ///used for testing
 			break;
 		case 5:
 			//level 5 boss wave case
-			beginBossWaveGeneric = true;                        ///used for testing
+			beginBossFight = true;                        ///used for testing
 			break;
 		default:
 			//nothing to do here
@@ -185,22 +186,21 @@ public class Levels05 : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Spawns the boss wave level 01.
+	/// Spawns the boss wave level 05.
 	/// </summary>
-	/// <returns>The boss wave level 01.</returns>
-	IEnumerator SpawnBossWaveGeneric()
+	/// <returns>The boss wave level 05.</returns>
+	IEnumerator SpawnBosslvl05()
 	{
 		yield return new WaitForSeconds(startWait);
 		while (true)
 		{
-			for (int i = 0; i < BossHazardCount; i++)
-			{
-				GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+			
+				GameObject boss = FinalEnemy;
 				Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 				Quaternion spawnRotation = Quaternion.identity;
-				Instantiate(hazard, spawnPosition, spawnRotation);
+				Instantiate(boss, spawnPosition, spawnRotation);
 				yield return new WaitForSeconds(0.1f);
-			}
+			
 			yield return new WaitForSeconds(waveWait);
 			//spawnWaveCount++;
 			print("wave count inside bosswave = " + spawnWaveCount);
