@@ -83,13 +83,13 @@ public class GameController : MonoBehaviour {
 		if (pBObject != null) {
 			pB = pBObject.GetComponent <PauseNavGUI> ();
 		}
-/*
+
 		GameObject lvl_05Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_05Object != null) {
 			//print ("level scirpt assigned");
 			lvl_05 = lvl_05Object.GetComponent <Levels05> ();
 		}
-*/
+
 
 		connection = PlayerPrefs.GetInt ("mConnection");
 		currentShip = PlayerPrefs.GetInt ("mShip");
@@ -146,8 +146,8 @@ public class GameController : MonoBehaviour {
 			lvl.StartGenericLvl ();
 			//start your CoRoutine
 		}else if(currentScene.name == "Level_05"){
-			lvl.StartGenericLvl ();
-			//lvl_05.StartLvlFive ();
+			//lvl.StartGenericLvl ();
+			lvl_05.StartLvlFive ();
 			//Begin Hazard spawn level_05
 			//Start  your CoRoutine
 		}
