@@ -50,6 +50,11 @@ public class DestroyByContact : MonoBehaviour {
 			Destroy(other.gameObject);
 		}
 
+		if(other.tag == "Bolt_Wingmen"){
+			Instantiate (explosion, transform.position, transform.rotation);
+			gameController.AddWingDestrCnt (1);
+		}
+
 		if (other.tag == "SplashDamage") {
 			Instantiate (explosion, transform.position, transform.rotation);
 		}
@@ -69,11 +74,11 @@ public class DestroyByContact : MonoBehaviour {
 			Destroy (other.gameObject);
 
 		}
-		if (other.tag == "WingMan") {
+		if (other.tag == "WingMan" || other.tag =="WingMan1") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
 			Instantiate (explosion, transform.position, transform.rotation);
-			Destroy (gameObject);
-			Destroy (other.gameObject);
+//			Destroy (gameObject);
+//			Destroy (other.gameObject);
 
 		}
 		gameController.AddScore (scoreValue);

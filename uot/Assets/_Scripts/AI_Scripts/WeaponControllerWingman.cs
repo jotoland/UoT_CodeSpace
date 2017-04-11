@@ -7,7 +7,7 @@ public class WeaponControllerWingman : MonoBehaviour
 {
 	public GameObject shot;
 	public Transform shotSpawn;
-
+	public float shotRate;
 
 //	void Update() {
 //		GameObject enemy = GameObject.FindGameObjectWithTag ("Enemy");
@@ -18,7 +18,7 @@ public class WeaponControllerWingman : MonoBehaviour
 
 	void Start ()
 	{
-			InvokeRepeating ("Fire", 0f, .3f);
+			InvokeRepeating ("Fire", 0f, shotRate);
 	}
 
 	void Fire ()
