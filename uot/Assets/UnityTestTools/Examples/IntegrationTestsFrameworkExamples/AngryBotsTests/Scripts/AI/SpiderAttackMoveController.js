@@ -1,4 +1,4 @@
-//#pragma strict
+#pragma strict
 
 // Public member data
 public var motor : MovementMotor;
@@ -95,7 +95,7 @@ function Update () {
 	proximityLevel = Mathf.Clamp01 (proximityLevel);
 	//proximityRenderer.material.color = Color.Lerp (Color.blue, Color.red, proximityLevel);
 	if (proximityLevel == 1)
-		//Explode ();
+		Explode ();
 	
 	if (Time.time > nextRaycastTime) {
 		nextRaycastTime = Time.time + 1;
@@ -133,7 +133,7 @@ function Explode () {
 	
 	var targetHealth : Health = player.GetComponent.<Health> ();
 	if (targetHealth) {
-		//Apply damage
+		// Apply damage
 		targetHealth.OnDamage (damageAmount * damageFraction, character.position - player.position);
 	}
 	player.GetComponent.<Rigidbody>().AddExplosionForce (10, character.position, damageRadius, 0.0, ForceMode.Impulse);

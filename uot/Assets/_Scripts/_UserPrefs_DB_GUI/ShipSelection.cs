@@ -19,7 +19,7 @@ public class ShipSelection : MonoBehaviour {
 	//variables for database communication 
 	[HideInInspector]
 	public string userName;
-	private int playerSelectionLevel;
+	private int nextScene;
 	//CoRo instance
 	private CoRoutines CoRo;
 	private SceneLoaderHandler SLH;
@@ -95,8 +95,8 @@ public class ShipSelection : MonoBehaviour {
 	public void ConfirmButton(){
 		//update database with seleciton
 		if (connection == 1) {
-			playerSelectionLevel = 9;
-			CoRo.UpdateShipSelect (playerSelectionLevel, index, userName);
+			nextScene = 9;
+			CoRo.UpdateShipSelect (nextScene, index, userName);
 		} else {
 			SLH.LoadNewSceneString ("LevelSelection");
 		}

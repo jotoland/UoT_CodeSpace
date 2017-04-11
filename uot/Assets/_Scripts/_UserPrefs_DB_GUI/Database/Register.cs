@@ -60,7 +60,7 @@ public class Register : MonoBehaviour {
 		}
 	}
 
-	public bool checkPassword(String password){
+	private bool checkPassword(String password){
 		bool pass = false;
 		bool tooShort = false;
 		bool tooLong = false;
@@ -84,7 +84,7 @@ public class Register : MonoBehaviour {
 		return pass;
 	}
 
-	public bool checkUserName(String username){
+	private bool checkUserName(String username){
 		bool pass = false;
 		if (username.Length > 5 && username.Length < 17) {
 			pass = true;
