@@ -52,7 +52,7 @@ public class DestroyByContact : MonoBehaviour {
 
 		if(other.tag == "Bolt_Wingmen"){
 			Instantiate (explosion, transform.position, transform.rotation);
-			gameController.AddWingDestrCnt (1);
+			//gameController.AddWingDestrCnt (1);
 		}
 
 		if (other.tag == "SplashDamage") {

@@ -52,7 +52,7 @@ public class GameController : MonoBehaviour {
 	private int missileCount;
 	private int lives;
 	private int rupees;
-	private int wingDestrCnt;
+	//private int wingDestrCnt;
 
 	//Variables used to update the DB.
 	private int rupeeUpdateInterval;
@@ -78,17 +78,18 @@ public class GameController : MonoBehaviour {
 		if (lvl_01Object != null) {
 			lvl_01 = lvl_01Object.GetComponent <LevelScript_01> ();
 		}
-<<<<<<< HEAD
+
 		GameObject pBObject = GameObject.FindGameObjectWithTag ("PauseBtn");
 		if (pBObject != null) {
 			pB = pBObject.GetComponent <PauseNavGUI> ();
-=======
+		}
+/*
 		GameObject lvl_05Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_05Object != null) {
 			//print ("level scirpt assigned");
 			lvl_05 = lvl_05Object.GetComponent <Levels05> ();
->>>>>>> DevelopmentBranch
 		}
+*/
 
 		connection = PlayerPrefs.GetInt ("mConnection");
 		currentShip = PlayerPrefs.GetInt ("mShip");
@@ -113,7 +114,7 @@ public class GameController : MonoBehaviour {
 		lives = 1;
 		score = 0;				
 		rupees = 0;
-		wingDestrCnt = 0;
+//		wingDestrCnt = 0;
 		playerDied = false;
 		gameOver = false;		
 		//restart = false;
@@ -145,7 +146,8 @@ public class GameController : MonoBehaviour {
 			lvl.StartGenericLvl ();
 			//start your CoRoutine
 		}else if(currentScene.name == "Level_05"){
-			lvl_05.StartLvlFive ();
+			lvl.StartGenericLvl ();
+			//lvl_05.StartLvlFive ();
 			//Begin Hazard spawn level_05
 			//Start  your CoRoutine
 		}
@@ -169,7 +171,7 @@ public class GameController : MonoBehaviour {
 		UpdateScore ();
 		UpdateRupees ();
 		UpdateLife ();
-		UpdateWingDestrCnt ();
+		//UpdateWingDestrCnt ();
 		userNameText.text = userName;
 	}
 /*
@@ -298,22 +300,22 @@ public class GameController : MonoBehaviour {
 		missileCount += newMissileCount;	//increment score
 		UpdateMissileCount ();			//call to update score string
 	}
-
+/*
 	public void AddWingDestrCnt(int newDestrCnt) {
 		wingDestrCnt += newDestrCnt;
 		UpdateWingDestrCnt ();
 	}
-
+*/
 	//updates the GUI rupee text
 	public void UpdateRupees(){
 		rupeeText.text = "Rupees: " + rupees;
 	}
-
+/*
 	//updates the GUI objects destroyed by wingmen text
 	public void UpdateWingDestrCnt() {
 		wingDestrCntText.text = "Wingmen Kill Count: " + wingDestrCnt;
 	}
-		
+*/
 	//updates the GUI lives text
 	public void UpdateLife(){
 		livesText.text = "Lives: " + lives;
