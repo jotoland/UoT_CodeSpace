@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityStandardAssets.CrossPlatformInput;
+// John G. Toland 4/10/17 Updated the contorls for CrossPlatformInput
 //System.Serializable will allow us to view this made class in the inspector
 [System.Serializable]
 //This is to clean up The inspector panel, to allow boundary to
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour {
 	void Update ()
 	{
 		//if mouse button is pressed instantiate the bolt and play shooting sound
-		if (Input.GetButton("Fire1") && Time.time > nextFire) 
+		if (CrossPlatformInputManager.GetButton("Fire1") && Time.time > nextFire) 
 		{
 			nextFire = Time.time + fireRate;
 			switch (numberOfSpawns) {
@@ -101,7 +102,7 @@ public class PlayerController : MonoBehaviour {
 
 			GetComponent<AudioSource>().Play ();
 		}
-		if (Input.GetButton("Fire2") && Time.time > nextMissile) 
+		if (CrossPlatformInputManager.GetButton("Fire2") && Time.time > nextMissile) 
 		{
 			nextMissile = Time.time + MissileCooldown;
 
@@ -119,9 +120,9 @@ public class PlayerController : MonoBehaviour {
 	void FixedUpdate(){
 
 		// moveHorizontal is how much we want to move left and right, x
-		float moveHorizontal = Input.GetAxis ("Horizontal");
+		float moveHorizontal = CrossPlatformInputManager.GetAxis ("Horizontal");
 		//moveVertical is how much we want to move up and down, y
-		float moveVertical = Input.GetAxis ("Vertical");
+		float moveVertical = CrossPlatformInputManager.GetAxis ("Vertical");
 
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 		GetComponent<Rigidbody>().velocity = movement * speed;
@@ -144,8 +145,33 @@ public class PlayerController : MonoBehaviour {
 
 	IEnumerator toggleCollider(){
 		GetComponent<Collider> ().enabled = false;
-		yield return new WaitForSeconds (3f);
+		bool toggle = true;
+		bool player01 = false;
+		MeshRenderer pcRenderer = GetComponent<MeshRenderer> ();
+		if (this.name == "Player_01(Clone)" || this.name == "Player_02(Clone)") {
+			if (this.name == "Player_01(Clone)") {
+				player01 = true;
+			}
+			GameObject child = this.transform.GetChild (0).gameObject;
+			MeshRenderer childRender = child.GetComponent<MeshRenderer> ();
+			for (int i = 0; i < 30; i++) {
+				toggle = !toggle;
+				yield return new WaitForSecondsRealtime (0.1f);
+				if (player01) {
+					pcRenderer.enabled = toggle;
+				}
+				childRender.enabled = toggle;
+			}
+		} else {
+			for (int i = 0; i < 30; i++) {
+				toggle = !toggle;
+				yield return new WaitForSecondsRealtime (0.1f);
+				pcRenderer.enabled = toggle;
+			}
+		}
+		yield return new WaitForSecondsRealtime (0.1f);
 		GetComponent<Collider> ().enabled = true;
 	}
 		
 }
+//finito
