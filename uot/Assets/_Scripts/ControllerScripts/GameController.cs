@@ -315,7 +315,9 @@ public class GameController : MonoBehaviour {
 
 	//updates the GUI objects destroyed by wingmen text
 	public void UpdateWingDestrCnt() {
-		wingDestrCntText.text = "Wingmen Kills: " + wingDestrCnt;
+		if (wingDestrCntText) {
+			wingDestrCntText.text = "Wingmen Kills: " + wingDestrCnt;
+		}
 	}
 
 	//updates the GUI lives text
