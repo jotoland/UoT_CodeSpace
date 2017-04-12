@@ -9,11 +9,12 @@ public class Comet_movement : MonoBehaviour {
     public float tumble;
     public Boundary boundary;
     
-
+    //spawns gameobjec
     void Start () {
         //int array that is used to calculate if the comet starts off moving left or right
         int[] leftOrRight = { -1, 1 };
         int i = Random.Range(0, 2);
+        //sets horizontal speed randomly going left or right
         horizontal_speed *= leftOrRight[i];
         //uses that speed and horizontal speed to calculate that vector in which the comet starts to move
         GetComponent<Rigidbody>().velocity = transform.forward * speed + transform.right * horizontal_speed;
@@ -22,6 +23,7 @@ public class Comet_movement : MonoBehaviour {
     }
     void FixedUpdate()
     {
+        //if gameobject's postion is less that the boundary give it its horizontal inverse
         if(GetComponent<Rigidbody>().position.x < boundary.xMin-6)
         {
             
@@ -31,6 +33,7 @@ public class Comet_movement : MonoBehaviour {
             GetComponent<Rigidbody>().velocity = (transform.forward * speed) + (transform.right * -1 * horizontal_speed);
             GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
         }
+        //else if gameobject's postion is greater that the boundary give it its horizontal inverse
         else if(GetComponent<Rigidbody>().position.x > boundary.xMax+6)
         {
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
