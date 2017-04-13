@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// created by Richard O'Neal 04/12/2017
+// so the boss knows when he should stop and begin fighting the player
 public class StopByBoundary : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) 
