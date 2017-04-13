@@ -192,11 +192,11 @@ public class Levels05 : MonoBehaviour
 	IEnumerator SpawnBosslvl05()
 	{
 		yield return new WaitForSeconds(startWait);
-		while (true)
-		{
-			
+		//while (true)
+		//{
+				GameObject bossObject = GameObject.FindGameObjectWithTag("Lvl05Boss");
 				GameObject boss = FinalEnemy;
-				Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Vector3 spawnPosition = new Vector3(0, 0, 25);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate(boss, spawnPosition, spawnRotation);
 				yield return new WaitForSeconds(0.1f);
@@ -204,13 +204,13 @@ public class Levels05 : MonoBehaviour
 			yield return new WaitForSeconds(waveWait);
 			//spawnWaveCount++;
 			print("wave count inside bosswave = " + spawnWaveCount);
-			if (!checkPlayerProgressInLvl(false))
+			//if (!checkPlayerProgressInLvl(false))
+			//{
+			//	break;
+			//}
+			/*if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver())
 			{
-				break;
-			}
-			if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver())
-			{
-				gc.levelCompleted();
+				wgc.levelCompleted();
 				yield return new WaitForSeconds(gc.getLoadLvlWait());
 				if (gc.getLvlCount() >= 5)
 				{
@@ -221,8 +221,8 @@ public class Levels05 : MonoBehaviour
 				{
 					SceneManager.LoadScene(gc.getLvlCount() + 2);
 				}
-			}
-		}
+			}*/
+		//}
 	}
 
 	#endregion
