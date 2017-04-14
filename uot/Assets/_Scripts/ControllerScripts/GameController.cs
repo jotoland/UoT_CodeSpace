@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour {
 	private Levels lvl;
 	private LevelScript_01 lvl_01;
 	private Levels05 lvl_05;
+	private Level_02 lvl_02;			
 	public GameObject[] shipList;
 	public GameObject[] rupeeBox;
 	public Transform spawnPlayer;
@@ -87,6 +88,11 @@ public class GameController : MonoBehaviour {
 			pB = pBObject.GetComponent <PauseNavGUI> ();
 		}
 
+		GameObject lvl_02Object = GameObject.FindGameObjectWithTag ("GameController");
+		if (lvl_02Object != null) {
+			lvl_02 = lvl_02Object.GetComponent <Level_02> ();
+		}
+
 		GameObject lvl_05Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_05Object != null) {
 			//print ("level scirpt assigned");
@@ -138,7 +144,7 @@ public class GameController : MonoBehaviour {
 			lvl_01.StartLvlOne ();
 		} else if (currentScene.name == "Level_02") {
 			//Begin Hazard spawn level_02.
-			lvl.StartGenericLvl ();
+			lvl_02.StartLvlTwo ();								
 			//StartCoroutine (SpawnWavesLevel_02 ());
 		} else if (currentScene.name == "Level_03") {
 			//Begin Hazard spawn level_03
@@ -158,7 +164,7 @@ public class GameController : MonoBehaviour {
 
 	/// getting the users score from items array no DB interaction but still waits for 1 second for DB interaction with CoRo
 	IEnumerator GetData(){
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(3);
 		userName = PlayerPrefs.GetString ("mUsername");
 		levelCount = PlayerPrefs.GetInt ("mLevel");
 		score = int.Parse(PlayerPrefs.GetString ("mPoints"));
