@@ -6,18 +6,38 @@ using UnityEngine;
 // if so deduct health if health = 0 then destroy the game object
 public class Lvl05BossHealth : MonoBehaviour {
 
-	public int Health;
+	private int Health;
+
+	void Start(){
+		Health = 20;
+	}
 	void OnTriggerEnter(Collider other) 
 	{
 		if(other.CompareTag("Bolt"))
 			{
-				Health -= 1;
-				Debug.Log ("Health deducted");
+			if (Health != 0) {
+				Health = Health - 1;
+				Debug.Log ("Health deducted = " + Health);
+			}
 
+				
 			}
-			if(Health == 0)
-			{
-				DestroyObject(gameObject);
-			}
+
+	}
+
+	void Update(){
+		print (Health);
+		if(Health == 0)
+		{
+			GetComponent<Mover> ().enabled = false;
+			GetComponent<EvasiveManeuver> ().enabled = false;
+			GetComponent<WeaponController> ().enabled = false;
+			GameObject.Find ("GameController").GetComponent<Level_02> ().setBOSS_IS_DEAD (true);
+			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
+			Destroy (this, 3f);
+		}
+	}
+	public int getHealth(){
+		return Health;
 	}
 }
