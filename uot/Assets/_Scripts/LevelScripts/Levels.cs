@@ -30,6 +30,8 @@ public class Levels : MonoBehaviour
     private bool beginBossWaveGeneric;
 	public int BossHazardCount;
 	private PauseNavGUI pNG;
+	public Scene currentScene;
+
 
     // Use this for initialization
     void Start(){
@@ -46,13 +48,16 @@ public class Levels : MonoBehaviour
         if (gcObject != null){
             gc = gcObject.GetComponent<GameController>();
         }
+		currentScene = SceneManager.GetActiveScene();
+
+
     }
 
     // Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
     void Update(){
         ///spawning the boss wave for level_01
         if (beginBossWaveGeneric){
-            StartCoroutine(SpawnBossWaveGeneric());
+			StartCoroutine (SpawnBossWaveGeneric ());
             beginBossWaveGeneric = false;
         }
     }
@@ -161,13 +166,18 @@ public class Levels : MonoBehaviour
     /// <returns>The waves.</returns>
     IEnumerator SpawnWaves(){
         ///we must wait for 3 seconds for the database to load and update the new information for each level.
+		GameObject hazard;
         yield return new WaitForSeconds(3);
         gc.setGameOverText(true);
         yield return new WaitForSeconds(startWait);
         gc.setGameOverText(false);
         while (true){
             for (int i = 0; i < hazardCount; i++){
-                GameObject hazard = hazards[Random.Range(0, hazards.Length)];//Picks random hazard from hazards array
+				if (currentScene.name == "Level_03") {
+					hazard = hazards [Random.Range (0, 4)];//Picks random hazard from hazards array
+				} else {
+					hazard = hazards[Random.Range(0, hazards.Length)];//Picks random hazard from hazards array
+				}
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
                 Instantiate(hazard, spawnPosition, spawnRotation);
@@ -186,13 +196,22 @@ public class Levels : MonoBehaviour
     /// <returns>The boss wave level 01.</returns>
     IEnumerator SpawnBossWaveGeneric(){
         yield return new WaitForSeconds(startWait);
+		GameObject hazard;
         while (true){
             for (int i = 0; i < BossHazardCount; i++) {
-                GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+				if (currentScene.name == "Level_03") {
+					hazard = hazards [Random.Range (2, hazards.Length)];
+				} else {
+					hazard = hazards[Random.Range(0, hazards.Length)];
+				}
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
                 Instantiate(hazard, spawnPosition, spawnRotation);
-                yield return new WaitForSeconds(0.1f);
+				if (currentScene.name == "Level_03") {
+					yield return new WaitForSeconds (0.25f);
+				} else {
+					yield return new WaitForSeconds(0.1f);
+				}
             }
             yield return new WaitForSeconds(waveWait);
             //spawnWaveCount++;
@@ -202,7 +221,6 @@ public class Levels : MonoBehaviour
             }
         }
     }
-
     #endregion
 }
 //finito
