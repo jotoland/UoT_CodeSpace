@@ -102,8 +102,8 @@ public class Login : MonoBehaviour {
 				LoginBtn ();
 			}
 		}
-		USERNAME = username.GetComponent<InputField> ().text;
-		PASSWORD = passwordInputField.GetComponent<InputField> ().text;
+		USERNAME = username.GetComponent<InputField> ().text.Trim ();
+		PASSWORD = passwordInputField.GetComponent<InputField> ().text.Trim ();
 		if (connection == 0) {
 			setELm ("Offline play Initializing...", false);
 		}
