@@ -158,7 +158,7 @@ public class GameController : MonoBehaviour {
 
 	/// getting the users score from items array no DB interaction but still waits for 1 second for DB interaction with CoRo
 	IEnumerator GetData(){
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(3);
 		userName = PlayerPrefs.GetString ("mUsername");
 		levelCount = PlayerPrefs.GetInt ("mLevel");
 		score = int.Parse(PlayerPrefs.GetString ("mPoints"));
