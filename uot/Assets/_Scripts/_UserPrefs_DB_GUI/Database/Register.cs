@@ -60,7 +60,7 @@ public class Register : MonoBehaviour {
 		}
 	}
 
-	public bool checkPassword(String password){
+	private bool checkPassword(String password){
 		bool pass = false;
 		bool tooShort = false;
 		bool tooLong = false;
@@ -84,7 +84,7 @@ public class Register : MonoBehaviour {
 		return pass;
 	}
 
-	public bool checkUserName(String username){
+	private bool checkUserName(String username){
 		bool pass = false;
 		if (username.Length > 5 && username.Length < 17) {
 			pass = true;
@@ -113,10 +113,10 @@ public class Register : MonoBehaviour {
 				cPassword.GetComponent<InputField> ().Select ();
 			}
 		}
-		USERNAME = username.GetComponent<InputField> ().text;
-		C_USERNAME = cUsername.GetComponent<InputField> ().text;
-		PASSWORD = password.GetComponent<InputField> ().text;
-		C_PASSWORD = cPassword.GetComponent<InputField> ().text;
+		USERNAME = username.GetComponent<InputField> ().text.Trim ();
+		C_USERNAME = cUsername.GetComponent<InputField> ().text.Trim ();
+		PASSWORD = password.GetComponent<InputField> ().text.Trim ();
+		C_PASSWORD = cPassword.GetComponent<InputField> ().text.Trim ();
 
 		//USER CROSS PLATFORM INPUT MANAGER HERE
 		if (CrossPlatformInputManager.GetButton ("Submit")) {

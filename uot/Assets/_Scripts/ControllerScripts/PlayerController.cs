@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
-// John G. Toland 4/10/17 Updated the contorls for CrossPlatformInput
+// John G. Toland 4/10/17 Updated the contorls for CrossPlatformInput 
+// also added the toggleing of collider and mesh renderer which is called from ReSpawn() in GC
+//
 //System.Serializable will allow us to view this made class in the inspector
 [System.Serializable]
 //This is to clean up The inspector panel, to allow boundary to
@@ -172,6 +174,11 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSecondsRealtime (0.1f);
 		GetComponent<Collider> ().enabled = true;
 	}
-		
+
+	#region USED FOR UNIT TESTS
+	public void clearValues(){
+		numberOfSpawns = 0;
+	}
+	#endregion
 }
 //finito
