@@ -7,11 +7,15 @@ using UnityEngine.SceneManagement;
 /// John G. Toland 3/12/17
 /// </summary>
 public class LevelScript_01 : MonoBehaviour {
-
+	private SceneLoaderHandler SLH;
+	private Scene currentScene;
+	private PauseNavGUI pB;
 	private GameController gc;
 	public Vector3 spawnValues;
 	public int hazardCount;
+	public int spawnX;
 	private int spawnWaveCount;
+	private bool isThisObjectScaling;
 
 	#region Level_01 GameObject[] Vars
 	public GameObject[] powerUpBox_01;
@@ -56,12 +60,12 @@ public class LevelScript_01 : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		#region Level_01 use of Start()
-		//level_01 only!
+		song = GetComponent<AudioSource> ();
 		lastTime = 0f;
 		deltaTime = 0f;
 		timer = 0f;
 		rythmnCount = 0;
+		isThisObjectScaling = false;
 
 		WAITING_4KEYS = true;
 		RESTART_THE_BEAT = false;
@@ -72,21 +76,22 @@ public class LevelScript_01 : MonoBehaviour {
 		SPAWN_POWERUP = true;
 		NEED_NEW_LVL = true;
 
-		#endregion
+		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
+		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
 
 		//get instance of gameController for access to game progress fucntions within your level
 		GameObject gcObject = GameObject.FindGameObjectWithTag ("GameController");
 		if (gcObject != null) {
 			gc = gcObject.GetComponent <GameController> ();
 		}
-		song = GetComponent<AudioSource> ();
-
+		GameObject pBObject = GameObject.FindGameObjectWithTag ("PauseBtn");
+		if (pBObject != null) {
+			pB = pBObject.GetComponent <PauseNavGUI> ();
+		}
 	}
 
 	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update () {
-		#region Level_01 use of Update()
-		//LEVEL_01 Only!!
 		if (gc.isPlayerDead () && NEED_RESPAWN && !gc.isGameOver()) {
 			StartCoroutine(ReSpawnLvl_01());
 
@@ -123,14 +128,18 @@ public class LevelScript_01 : MonoBehaviour {
 			RESTART_THE_BEAT = false;
 			StartCoroutine (SpawnSynthWavesLevel_01 ());
 		}
-		if(!song.isPlaying && !gc.isGameOver() && NEED_NEW_LVL) {
+		if(!song.isPlaying && !gc.isGameOver() && NEED_NEW_LVL && !pB.GameIsPaused () && spawnWaveCount > 100) {
 			NEED_NEW_LVL = false;
 			StartCoroutine(LoadNewLvl());
-
 		}
-		#endregion
+		if(!pB.GameIsPaused() && gc.isGameOver()){
+			gc.setRestart(true);
+		}
 	}
 
+	public bool isScaling(){
+		return isThisObjectScaling;
+	}
 
 	#region methodsToStartCoroutines
 	/// <summary>
@@ -143,13 +152,11 @@ public class LevelScript_01 : MonoBehaviour {
 
 	IEnumerator LoadNewLvl(){
 		gc.levelCompleted ();
-		yield return new WaitForSeconds (gc.getLoadLvlWait());
-		//if (gc.getLvlCount () >= 5) {
-		//gc.resetLvlCount ();
-		//SceneManager.LoadScene (gc.getLvlCount ());
-		//} else {
-		SceneManager.LoadScene (gc.getLvlCount()+2);
-		//}
+		yield return new WaitForSeconds (3);
+		print("[LoadNewLvl_Level_01Script] levelCount = " + gc.getLvlCount ());
+		//level count + 3 (compensation for the login scene and player seleciton scene)
+		//SceneManager.LoadScene (gc.getLvlCount()+3);
+		SLH.LoadNewSceneInt (gc.getLvlCount ()+3);
 	}
 
 	IEnumerator ReSpawnLvl_01(){
@@ -164,11 +171,17 @@ public class LevelScript_01 : MonoBehaviour {
 
 	IEnumerator SpawnPowerUps(){
 		SPAWN_POWERUP = false;
-		yield return new WaitForSeconds (4f);
+		yield return new WaitForSeconds (3);
+		if (spawnWaveCount < 0 && !gc.isGameOver()) {
+			yield return new WaitForSeconds (3f);
+			gc.setGameOverText (true);
+			yield return new WaitForSeconds (60f / synthBpm);
+			gc.setGameOverText (false);
+		}
 		int pos;
 		int id = -1;
 		while(true){
-			pos = id * 6;
+			pos = id * spawnX;
 			for(int i =0; i<5; i++){
 				GameObject powerUp = powerUpBox_01 [Random.Range (0, powerUpBox_01.Length)];
 				Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
@@ -216,7 +229,7 @@ public class LevelScript_01 : MonoBehaviour {
 				
 	IEnumerator SpawnSynthWavesLevel_01 (){
 		if (spawnWaveCount == 0) {
-			yield return new WaitForSeconds (3f);
+			yield return new WaitForSeconds (3);
 			gc.setGameOverText (true);
 			yield return new WaitForSeconds (60f / synthBpm);
 			gc.setGameOverText (false);
@@ -228,14 +241,20 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * 6;
+			pos = id * spawnX;
 			if (timer >= (60f /snareBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = synthHazards_lvl_01 [Random.Range (0, synthHazards_lvl_01.Length)];
+					GameObject hazard = synthHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos * id;
+					if (j < synthHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f/synthBpm);
 				}
 			}
@@ -243,7 +262,6 @@ public class LevelScript_01 : MonoBehaviour {
 			yield return new WaitForSeconds (0);
 			if (!checkPlayerProgressInLvl (true)) {
 				print (" inside Synth = " + spawnWaveCount);
-
 				break;
 			}
 			rythmnCount++;
@@ -276,15 +294,21 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * 6;
+			pos = id * spawnX;
 			id = id * -1;
 			if (timer >= (60f /snareBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = snareHazards_lvl_01 [Random.Range (0, snareHazards_lvl_01.Length)];
+					GameObject hazard = snareHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos + id;
+					if (j < snareHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f/snareBpm);
 				}
 			}
@@ -308,15 +332,21 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * 6;
+			pos = id * spawnX;
 			id = id * -1;
 			if (timer >= (60f / HHBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = HHHazards_lvl_01 [Random.Range (0, HHHazards_lvl_01.Length)];
+					GameObject hazard = HHHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos + id;
+					if (j < HHHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f / HHBpm);
 				}
 			}
@@ -339,15 +369,21 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * -6;
+			pos = id * -spawnX;
 			id = id * -1;
 			if (timer >= (60f /KDBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = KDHazards_lvl_01 [Random.Range (0, KDHazards_lvl_01.Length)];
+					GameObject hazard = KDHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos - id;
+					if (j < KDHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f/KDBpm);
 				}
 			}
@@ -371,15 +407,21 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * -6;
+			pos = id * -spawnX;
 			id = id * -1;
 			if (timer >= (60f /BassBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = BassHazards_lvl_01 [Random.Range (0, BassHazards_lvl_01.Length)];
+					GameObject hazard = BassHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos - id;
+					if (j < BassHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f/BassBpm);
 				}
 			}
@@ -399,14 +441,20 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * 6;
+			pos = id * spawnX;
 			if (timer >= (60f /KeyBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = KeyHazards_lvl_01 [Random.Range (0, KeyHazards_lvl_01.Length)];
+					GameObject hazard = KeyHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos * id;
+					if (j < KeyHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f/KeyBpm);
 				}
 			}
@@ -432,16 +480,26 @@ public class LevelScript_01 : MonoBehaviour {
 		while (true) {
 			deltaTime = GetComponent<AudioSource> ().time - lastTime;
 			timer += deltaTime;
-			pos = id * 6;
+			pos = id * spawnX;
 			id = id * -1;
 			if (timer >= (60f /SSBpm)) {
+				int j = 0;
 				for (int i = 0; i < hazardCount; i++) {
-					GameObject hazard = SSHazards_lvl_01 [Random.Range (0, SSHazards_lvl_01.Length)];
+					GameObject hazard = SSHazards_lvl_01 [j];
 					Vector3 spawnPosition = new Vector3 (pos, spawnValues.y, spawnValues.z);
 					Quaternion spawnRotation = Quaternion.identity;
 					Instantiate (hazard, spawnPosition, spawnRotation);
 					pos = pos + id;
+					if (j < SSHazards_lvl_01.Length-1) {
+						j++;
+					} else {
+						j = 0;
+					}
 					yield return new WaitForSeconds (60f/SSBpm);
+					if (!isThisObjectScaling) {
+						isThisObjectScaling = true;
+					}
+
 				}
 			}
 			lastTime = GetComponent<AudioSource> ().time;

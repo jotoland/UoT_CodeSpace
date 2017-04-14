@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 /****
  *John G Toland   2/5/17
  * This is the script for the ShipList,
@@ -14,23 +15,33 @@ public class ShipSelection : MonoBehaviour {
 	//variables for navigation through array
 	private int index;
 	public GameObject[] shipList;
+	private GameObject SLHo;
 	//variables for database communication 
+	[HideInInspector]
 	public string userName;
-	public int lvlOne = 1;
+	private int nextScene;
 	//CoRo instance
-	public CoRoutines CoRo;
+	private CoRoutines CoRo;
+	private SceneLoaderHandler SLH;
 	private int connection;
 
 	// Use this for initialization
 	void Start () {
+		Scene currentScene = SceneManager.GetActiveScene ();
 
 		GameObject CoRoObject = GameObject.FindGameObjectWithTag ("CoRoutines");
 		//checking that we can acces our instance
 		if (CoRoObject != null) {
 			CoRo = CoRoObject.GetComponent <CoRoutines> ();
 		}
+		if (currentScene.name == "PlayerSelection") {
+			SLHo = GameObject.Find ("ShipSelectionCanvas");
+			SLH = SLHo.GetComponent<SceneLoaderHandler> ();
+		} 
+	
 		//getting the user name from player prefs instead of DB this time
 		userName = PlayerPrefs.GetString ("mUserName");
+
 		connection = PlayerPrefs.GetInt ("mConnection");
 		//getting the count of child objects inside the shiplist object located in the hierachy
 		shipList = new GameObject[transform.childCount];
@@ -43,15 +54,17 @@ public class ShipSelection : MonoBehaviour {
 		foreach (GameObject go in shipList) {
 			go.SetActive (false);
 		}
+
 		//get data from the data base used in the level scenes
 		//necessary for here instead of writing another script that is very similar
-		//Getting the currently loaded scene using the SceneManager.
-		Scene currentScene = SceneManager.GetActiveScene ();
+		//Getting the currently loaded scene using the SceneManager
 		if (connection == 1 && currentScene.name != "PlayerSelection") {
-			CoRo.GetData (shipList, index, userName);
+			//CoRo.GetData (shipList, index, userName);
+			shipList [PlayerPrefs.GetInt ("mShip")].SetActive (true);
 		} else {
-			
 			if (currentScene.name == "PlayerSelection") {
+				GameObject usernameText = GameObject.Find("UserName");
+				usernameText.GetComponent <Text> ().text = userName;
 				shipList [index].SetActive (true);
 			} else {
 				shipList [PlayerPrefs.GetInt ("mShip")].SetActive (true);
@@ -82,12 +95,12 @@ public class ShipSelection : MonoBehaviour {
 	public void ConfirmButton(){
 		//update database with seleciton
 		if (connection == 1) {
-			CoRo.UpdateShipSelect (lvlOne, index, userName);
+			nextScene = 9;
+			CoRo.UpdateShipSelect (nextScene, index, userName);
 		} else {
-			PlayerPrefs.SetInt ("mLevel", lvlOne);
-			PlayerPrefs.SetInt ("mShip", index);
-			SceneManager.LoadScene ("Level_01");
+			SLH.LoadNewSceneString ("LevelSelection");
 		}
+		PlayerPrefs.SetInt ("mShip", index);
 	}
 	#endregion
 

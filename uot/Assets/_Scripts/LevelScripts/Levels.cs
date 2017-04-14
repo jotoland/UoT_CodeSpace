@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-/// <summary>
-/// Levels.
-/// John G. Toland 3/10/17
-/// This script is intended to use amoungst all levels.
-/// This script controls the progress of the level.
-/// Seperating the progress of the level and the over all gamecontroller allows for 
-/// better readability. 
-/// The addition of this script also allows form making all variables in GameController private, 
-/// acessing these varibles are now done with getters and setters.
-/// </summary>
+/*
+ *  Levels.
+ * John G. Toland 3/10/17
+ * This script is intended to use amoungst all levels.
+ * This script controls the progress of the level.
+ * Seperating the progress of the level and the over all gamecontroller allows for 
+ * better readability. 
+ * The addition of this script also allows form making all variables in GameController private, 
+ * acessing these varibles are now done with getters and setters.
+ * John G. Toland 4/10/17 Updated the detection of winning the level and Loading the next scene.
+ * The earlier version was not the best way to do it.
+ * */
 public class Levels : MonoBehaviour
 {
     //all level variables
-    //Scene currentScene;
+	private SceneLoaderHandler SLH;
     private GameController gc;
     public GameObject[] hazards;
     public Vector3 spawnValues;
@@ -27,106 +29,111 @@ public class Levels : MonoBehaviour
     private int spawnWaveCount;
     private bool beginBossWaveGeneric;
 	public int BossHazardCount;
+	private PauseNavGUI pNG;
+	public Scene currentScene;
 
 
     // Use this for initialization
-    void Start()
-    {
-        //currentScene = SceneManager.GetActiveScene ();
+    void Start(){
+		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
+		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
+
+		GameObject pauseNavGUI = GameObject.FindGameObjectWithTag ("PauseBtn");
+		if(pauseNavGUI != null){
+			pNG = pauseNavGUI.GetComponent<PauseNavGUI> ();
+		}
+
         //get instance of gameController for access to game progress fucntions within your level
         GameObject gcObject = GameObject.FindGameObjectWithTag("GameController");
-        if (gcObject != null)
-        {
+        if (gcObject != null){
             gc = gcObject.GetComponent<GameController>();
         }
+		currentScene = SceneManager.GetActiveScene();
+
+
     }
 
     // Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
-    void Update()
-    {
+    void Update(){
         ///spawning the boss wave for level_01
-        if (beginBossWaveGeneric)
-        {
-            StartCoroutine(SpawnBossWaveGeneric());
+        if (beginBossWaveGeneric){
+			StartCoroutine (SpawnBossWaveGeneric ());
             beginBossWaveGeneric = false;
         }
     }
 
     #region methodsToStartCoroutines
-    /// <summary>
     /// Starts the generic lvl Coroutine.
-    /// </summary>
-    public void StartGenericLvl()
-    {
+    public void StartGenericLvl(){
         StartCoroutine(SpawnWaves());
     }
     #endregion
 
-    /// <summary>
     /// Checks the player progress in lvl.
-    /// </summary>
-    /// <returns><c>true</c>, if player progress in lvl was checked, <c>false</c> otherwise.</returns>
-    /// <param name="isRegularWave">If set to <c>true</c> is regular wave.</param>
-    public bool checkPlayerProgressInLvl(bool isRegularWave)
-    {
-        if (isRegularWave)
-        {
+    public bool checkPlayerProgressInLvl(bool isRegularWave){
+        if (isRegularWave){
             spawnWaveCount++;
             print("wave count = " + spawnWaveCount);
-            if (gc.isGameOver())
-            {
+            if (gc.isGameOver()){
                 gc.setRestart(true);
                 return false;
-            }
-            else if (gc.isPlayerDead())
-            {
+            }else if (gc.isPlayerDead()){
                 spawnWaveCount = 0;
                 print("inside player is dead");
                 gc.ReSpawn();
                 gc.setPlayerDead(false);
                 return true;
-            }
-            else if (spawnWaveCount == numOfWavesInLvl && !gc.isGameOver())
-            {
+            }else if (spawnWaveCount == numOfWavesInLvl && !gc.isGameOver()){
                 enteringBossWave(gc.getLvlCount());
                 return false;
-            }
-            else
-            {
+			}else if (pNG.isLEFT_SCENE ()) {
+				return false;
+			} else {
                 return true;
             }
-        }
-        else
-        {
+        }else{
             spawnWaveCount++;
             print("wave count = " + spawnWaveCount);
-            if (gc.isGameOver())
-            {
-                gc.setRestart(true);
-                return false;
-            }
-            else if (gc.isPlayerDead())
-            {
-                spawnWaveCount = numOfWavesInLvl;
-                gc.ReSpawn();
-                gc.setPlayerDead(false);
-                return true;
-            }
-            else
-            {
-                return true;
-            }
+			if (gc.isGameOver ()) {
+				gc.setRestart (true);
+				return false;
+			} else if (gc.isPlayerDead ()) {
+				spawnWaveCount = numOfWavesInLvl;
+				gc.ReSpawn ();
+				gc.setPlayerDead (false);
+				return true;
+			} else if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver ()) {
+				StartCoroutine(LoadNewLvl());
+				return false;
+			} else if (pNG.isLEFT_SCENE ()) {
+				return false;
+			} else {
+				return true;
+			}
         }
     }
+
+	IEnumerator LoadNewLvl(){
+		yield return new WaitForSeconds (3);
+		if (gc.getLvlCount() >= 5){
+			gc.levelCompleted();
+			gc.resetLvlCount();
+			yield return new WaitForSeconds (3);
+			SLH.LoadNewSceneInt (1);
+		}else{
+			gc.levelCompleted ();
+			yield return new WaitForSeconds (3);
+			//level count + 3 (compensation for the login scene and player seleciton scene)
+			SLH.LoadNewSceneInt (gc.getLvlCount ()+3);
+		}
+	}
 
     /// <summary>
     /// Enterings the boss wave.
     /// </summary>
     /// <param name="lvlCount">Lvl count.</param>
-    public void enteringBossWave(int lvlCount)
-    {
-        switch (lvlCount)
-        {
+    public void enteringBossWave(int lvlCount){
+        switch (lvlCount){
             case 1:
                 beginBossWaveGeneric = true;
                 break;
@@ -157,26 +164,27 @@ public class Levels : MonoBehaviour
     /// Spawns the waves.
     /// </summary>
     /// <returns>The waves.</returns>
-    IEnumerator SpawnWaves()
-    {
+    IEnumerator SpawnWaves(){
         ///we must wait for 3 seconds for the database to load and update the new information for each level.
-        yield return new WaitForSeconds(3f);
+		GameObject hazard;
+        yield return new WaitForSeconds(3);
         gc.setGameOverText(true);
         yield return new WaitForSeconds(startWait);
         gc.setGameOverText(false);
-        while (true)
-        {
-            for (int i = 0; i < hazardCount; i++)
-            {
-                GameObject hazard = hazards[Random.Range(0, hazards.Length)];//Picks random hazard from hazards array
+        while (true){
+            for (int i = 0; i < hazardCount; i++){
+				if (currentScene.name == "Level_03") {
+					hazard = hazards [Random.Range (0, 4)];//Picks random hazard from hazards array
+				} else {
+					hazard = hazards[Random.Range(0, hazards.Length)];//Picks random hazard from hazards array
+				}
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
                 Instantiate(hazard, spawnPosition, spawnRotation);
                 yield return new WaitForSeconds(spawnWait);
             }
             yield return new WaitForSeconds(waveWait);
-            if (!checkPlayerProgressInLvl(true))
-            {
+            if (!checkPlayerProgressInLvl(true)){
                 break;
             }
         }
@@ -186,43 +194,33 @@ public class Levels : MonoBehaviour
     /// Spawns the boss wave level 01.
     /// </summary>
     /// <returns>The boss wave level 01.</returns>
-    IEnumerator SpawnBossWaveGeneric()
-    {
+    IEnumerator SpawnBossWaveGeneric(){
         yield return new WaitForSeconds(startWait);
-        while (true)
-        {
-            for (int i = 0; i < BossHazardCount; i++)
-            {
-                GameObject hazard = hazards[Random.Range(0, hazards.Length)];
+		GameObject hazard;
+        while (true){
+            for (int i = 0; i < BossHazardCount; i++) {
+				if (currentScene.name == "Level_03") {
+					hazard = hazards [Random.Range (2, hazards.Length)];
+				} else {
+					hazard = hazards[Random.Range(0, hazards.Length)];
+				}
                 Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
                 Quaternion spawnRotation = Quaternion.identity;
                 Instantiate(hazard, spawnPosition, spawnRotation);
-                yield return new WaitForSeconds(0.1f);
+				if (currentScene.name == "Level_03") {
+					yield return new WaitForSeconds (0.25f);
+				} else {
+					yield return new WaitForSeconds(0.1f);
+				}
             }
             yield return new WaitForSeconds(waveWait);
             //spawnWaveCount++;
             print("wave count inside bosswave = " + spawnWaveCount);
-            if (!checkPlayerProgressInLvl(false))
-            {
+            if (!checkPlayerProgressInLvl(false)){
                 break;
-            }
-            if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver())
-            {
-                gc.levelCompleted();
-                yield return new WaitForSeconds(gc.getLoadLvlWait());
-                if (gc.getLvlCount() >= 5)
-                {
-                    gc.resetLvlCount();
-                    SceneManager.LoadScene(gc.getLvlCount());
-                }
-                else
-                {
-                    SceneManager.LoadScene(gc.getLvlCount() + 2);
-                }
             }
         }
     }
-
     #endregion
 }
 //finito

@@ -34,8 +34,8 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") ||
-			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp"){
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Lvl05Boss") ||
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp" || other.tag== "BossBoundary" ){
 			return;
 		}
 		//creating explosion for asteroids being shot
@@ -48,6 +48,11 @@ public class DestroyByContact : MonoBehaviour {
 			Instantiate (MissileDamage, other.transform.position, other.transform.rotation);
 			Instantiate (missileExplosion, other.transform.position, other.transform.rotation);
 			Destroy(other.gameObject);
+		}
+
+		if(other.tag == "Bolt_Wingmen"){
+			Instantiate (explosion, transform.position, transform.rotation);
+			gameController.AddWingDestrCnt (1);
 		}
 
 		if (other.tag == "SplashDamage") {
@@ -69,11 +74,11 @@ public class DestroyByContact : MonoBehaviour {
 			Destroy (other.gameObject);
 
 		}
-		if (other.tag == "WingMan") {
+		if (other.tag == "WingMan" || other.tag =="WingMan1") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
 			Instantiate (explosion, transform.position, transform.rotation);
-			Destroy (gameObject);
-			Destroy (other.gameObject);
+//			Destroy (gameObject);
+//			Destroy (other.gameObject);
 
 		}
 		gameController.AddScore (scoreValue);

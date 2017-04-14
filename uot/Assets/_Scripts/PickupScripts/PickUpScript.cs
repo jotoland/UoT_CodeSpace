@@ -70,6 +70,7 @@ public class PickUpScript : MonoBehaviour {
 	public void OnTriggerEnter(Collider other){
 		//if the other object (not the one the script is on) is the player then let the player pick it up!
 		if (other.tag == "Player") {
+			print (other.tag);
 			if (isScaling) {
 				isScaling = false;
 			}
@@ -141,3 +142,4 @@ public class PickUpScript : MonoBehaviour {
 
 
 }
+//finito
