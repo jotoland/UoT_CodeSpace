@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class MixerLevels : MonoBehaviour {
 
 	public AudioMixer mainMix;
-	public Slider Explostions;
+	public Slider Explosions;
 	public Slider Blasters;
 	public Slider Music;
 	public Slider Collectables;
@@ -37,8 +37,8 @@ public class MixerLevels : MonoBehaviour {
 		}
 	}
 
-	public void SliderValuesToMute(){
-		Explostions.value = -80;
+	private void SliderValuesToMute(){
+		Explosions.value = -80;
 		Collectables.value = -80;
 		Blasters.value = -80;
 		Music.value = -80;
@@ -48,7 +48,7 @@ public class MixerLevels : MonoBehaviour {
 	public void SetMasterLvl(float MasterLvl){
 		mainMix.SetFloat ("Master", MasterLvl);
 		if (MasterLvl < -10) {
-			Explostions.value = MasterLvl;
+			Explosions.value = MasterLvl;
 		}
 		if (MasterLvl < -20) {
 			Collectables.value = MasterLvl;
@@ -78,12 +78,12 @@ public class MixerLevels : MonoBehaviour {
 		mainMix.SetFloat ("Explosions", ExplosionsLvl);
 	}
 
-	public void ClearAll(){
+	private void ClearAll(){
 		AudioListener.volume = 1;
 		pNG.AUDIO_MUTED = false;
 		muteAudio.GetComponentInChildren<Text>().text = "Mute Audio";
 		mainMix.ClearFloat ("Explosions");
-		Explostions.value = -10;
+		Explosions.value = -10;
 		mainMix.ClearFloat ("PickUps");
 		Collectables.value = -20;
 		mainMix.ClearFloat ("EnemyShots");
