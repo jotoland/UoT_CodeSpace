@@ -18,7 +18,6 @@ public class WingmenNavigation : MonoBehaviour {
 		//wait ();
 		//InvokeRepeating ("Move", 0f, .01667f);
 		InvokeRepeating ("Move", 5f, .0166667f);
-
 	}
 
 //	IEnumerator wait () {
@@ -43,6 +42,7 @@ public class WingmenNavigation : MonoBehaviour {
 			if (enemy) {
 				navMeshAgent.destination = enemy.transform.position;
 			}
+
 		} else {
 			Instantiate (playerExplosion, gameObject.transform.position, gameObject.transform.rotation);
 			Destroy (gameObject);
