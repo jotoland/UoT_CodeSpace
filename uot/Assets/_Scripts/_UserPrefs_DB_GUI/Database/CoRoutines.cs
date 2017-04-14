@@ -254,6 +254,9 @@ public class CoRoutines : MonoBehaviour {
 			print (updateAccountReturn);
 			if (updateAccountReturn == "Success.") {
 				print ("[ello]: Success: DATA! updated with DataID: " + dataID);
+				if (dataID.Equals ("lvl")) {
+					PlayerPrefs.SetInt ("mLevel", data);
+				}
 			}
 		}
 	}
