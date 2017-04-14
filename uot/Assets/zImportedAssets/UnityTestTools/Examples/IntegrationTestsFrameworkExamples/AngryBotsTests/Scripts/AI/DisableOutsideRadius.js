@@ -11,7 +11,7 @@ function Awake () {
 	sphereCollider = GetComponent.<SphereCollider> ();
 	activeRadius = sphereCollider.radius;
 
-	//Disable ();
+	Disable ();
 }
 
 function OnTriggerEnter (other : Collider) {
