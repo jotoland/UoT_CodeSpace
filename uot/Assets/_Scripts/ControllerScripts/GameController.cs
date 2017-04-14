@@ -16,6 +16,9 @@ using UnityEngine;
 /// and also added a toggle collider that toggles the render so the player knows he has respawned.
 /// </summary>
 public class GameController : MonoBehaviour {
+	//used for unit testing
+	private bool Test = false;
+
 	private SceneLoaderHandler SLH;
 	private PauseNavGUI pB;
 	public GameObject restartButton;
@@ -224,7 +227,31 @@ public class GameController : MonoBehaviour {
 			gameOverText.text = "";
 		}
 	}
+	#region USED FOR UNIT TESTS
+	public int getRupeeCount(){
+		return rupees;
+	}
 
+	public int getScore(){
+		return score;
+	}
+
+	public int getLives(){
+		return lives;
+	}
+
+	public void clearValues(){
+		rupees = 0;
+		score = 0;
+		lives = 0;
+		scoreUpdateInterval = 0;
+		rupeeUpdateInterval = 0;
+	}
+
+	public void setTest(){
+		Test = true;
+	}
+	#endregion
 	public bool isGameOver(){
 		return gameOver;
 	}
@@ -290,8 +317,9 @@ public class GameController : MonoBehaviour {
 
 	public void AddLife(int newLifeValue){
 		lives += newLifeValue;
-
-		CoRo.UpdateData (userName, lives, "liv");
+		if (!Test) {
+			CoRo.UpdateData (userName, lives, "liv");
+		}
 		UpdateLife ();
 	}
 

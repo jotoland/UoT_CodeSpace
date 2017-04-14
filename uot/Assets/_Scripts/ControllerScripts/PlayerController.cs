@@ -174,6 +174,11 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSecondsRealtime (0.1f);
 		GetComponent<Collider> ().enabled = true;
 	}
-		
+
+	#region USED FOR UNIT TESTS
+	public void clearValues(){
+		numberOfSpawns = 0;
+	}
+	#endregion
 }
 //finito

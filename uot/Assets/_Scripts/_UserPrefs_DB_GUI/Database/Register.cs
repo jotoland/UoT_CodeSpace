@@ -113,10 +113,10 @@ public class Register : MonoBehaviour {
 				cPassword.GetComponent<InputField> ().Select ();
 			}
 		}
-		USERNAME = username.GetComponent<InputField> ().text;
-		C_USERNAME = cUsername.GetComponent<InputField> ().text;
-		PASSWORD = password.GetComponent<InputField> ().text;
-		C_PASSWORD = cPassword.GetComponent<InputField> ().text;
+		USERNAME = username.GetComponent<InputField> ().text.Trim ();
+		C_USERNAME = cUsername.GetComponent<InputField> ().text.Trim ();
+		PASSWORD = password.GetComponent<InputField> ().text.Trim ();
+		C_PASSWORD = cPassword.GetComponent<InputField> ().text.Trim ();
 
 		//USER CROSS PLATFORM INPUT MANAGER HERE
 		if (CrossPlatformInputManager.GetButton ("Submit")) {
