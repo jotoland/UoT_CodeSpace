@@ -31,7 +31,10 @@ public class Level_02 : MonoBehaviour
 	private int spawnWaveCount;
 	private bool bossWaveStarts;
 	public int BossHazardCount;
-	private PauseNavGUI pNG;
+	private PauseNavGUI pB;
+	private bool NEED_NEW_LVL = true;
+	private Lvl05BossHealth healthScript = null;
+	private bool BOSS_IS_DEAD = false;
 
 
 	// Use this for initialization
@@ -42,7 +45,7 @@ public class Level_02 : MonoBehaviour
 
 		GameObject pauseNavGUI = GameObject.FindGameObjectWithTag ("PauseBtn");
 		if(pauseNavGUI != null){
-			pNG = pauseNavGUI.GetComponent<PauseNavGUI> ();
+			pB = pauseNavGUI.GetComponent<PauseNavGUI> ();
 		}
 		//currentScene = SceneManager.GetActiveScene ();
 		//get instance of gameController for access to game progress fucntions within your level
@@ -56,12 +59,30 @@ public class Level_02 : MonoBehaviour
 	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update()
 	{
+		
 		///spawning the boss for level_02
 		if (bossWaveStarts)
 		{
 			StartCoroutine(SpawnBosslvl02());
+			healthScript = FinalEnemy.GetComponent<Lvl05BossHealth> ();
+			GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerController> ().setCAN_FIRE (false);
 			bossWaveStarts = false;
 		}
+
+		if(!gc.isGameOver() && NEED_NEW_LVL && !pB.GameIsPaused () && healthScript) {
+			
+			if (BOSS_IS_DEAD) {
+				print (healthScript.getHealth ());
+				NEED_NEW_LVL = false;
+				StartCoroutine(LoadNewLvl());
+				BOSS_IS_DEAD = false;
+			}
+
+		}
+	}
+
+	public void setBOSS_IS_DEAD(bool isIt){
+		BOSS_IS_DEAD = isIt;
 	}
 
 	#region methodsToStartCoroutines
@@ -225,6 +246,8 @@ public class Level_02 : MonoBehaviour
 		yield return new WaitForSeconds(0.1f);
 
 		yield return new WaitForSeconds(waveWait);
+		checkPlayerProgressInLvl (true);
+
 		//spawnWaveCount++;
 		print("wave count inside bosswave = " + spawnWaveCount);
 

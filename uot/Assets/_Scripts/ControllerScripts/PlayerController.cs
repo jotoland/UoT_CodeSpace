@@ -31,6 +31,11 @@ public class PlayerController : MonoBehaviour {
 	private float nextMissile;
 	private int missileShot = -1;
 	public int numberOfSpawns;
+	private bool CAN_FIRE = true;
+
+	public void setCAN_FIRE(bool canIt){
+		CAN_FIRE = canIt;
+	}
 
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -54,7 +59,7 @@ public class PlayerController : MonoBehaviour {
 	void Update ()
 	{
 		//if mouse button is pressed instantiate the bolt and play shooting sound
-		if (CrossPlatformInputManager.GetButton("Fire1") && Time.time > nextFire) 
+		if (CrossPlatformInputManager.GetButton("Fire1") && Time.time > nextFire && CAN_FIRE) 
 		{
 			nextFire = Time.time + fireRate;
 			switch (numberOfSpawns) {

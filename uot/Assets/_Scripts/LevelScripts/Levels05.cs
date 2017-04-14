@@ -204,6 +204,7 @@ public class Levels05 : MonoBehaviour
 			yield return new WaitForSeconds(waveWait);
 			//spawnWaveCount++;
 			print("wave count inside bosswave = " + spawnWaveCount);
+			checkPlayerProgressInLvl (true);
 			//if (!checkPlayerProgressInLvl(false))
 			//{
 			//	break;
