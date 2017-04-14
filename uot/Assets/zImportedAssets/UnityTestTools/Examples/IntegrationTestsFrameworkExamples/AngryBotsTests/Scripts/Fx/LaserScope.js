@@ -43,7 +43,7 @@ function Update () {
 
 	var aniFactor : float = Mathf.PingPong (Time.time * pulseSpeed, 1.0);
 	aniFactor = Mathf.Max (minWidth, aniFactor) * maxWidth;
-	//lRenderer.SetWidth (aniFactor, aniFactor);
+	lRenderer.SetWidth (aniFactor, aniFactor);
 	
 	// Cast a ray to find out the end point of the laser
 	var hitInfo : RaycastHit = raycast.GetHitInfo ();

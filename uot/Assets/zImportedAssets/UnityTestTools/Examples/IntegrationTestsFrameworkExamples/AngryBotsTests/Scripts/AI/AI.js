@@ -1,4 +1,4 @@
-//#pragma strict
+#pragma strict
 
 // Public member data
 public var behaviourOnSpotted : MonoBehaviour;
