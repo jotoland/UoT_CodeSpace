@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* John G. Toland 04/14/17
+ * Integration Test: Collecting Points When Destroying Hazards
+ * This test is successful when the player collects points after
+ * destroying hazards. In this test there are 6 hazards 10 points a piece.
+ * */
 public class PointsTest : MonoBehaviour {
 	GameController gc;
 
@@ -36,3 +40,4 @@ public class PointsTest : MonoBehaviour {
 		Debug.Log ("Expected: " + expected + " Actual: " + actual);
 	}
 }
+//finito

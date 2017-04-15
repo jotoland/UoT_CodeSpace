@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* John G. Toland 04/14/17
+ * Integration Test: Collecting Rupee Pickups
+ * Test is success when a rupee is collected and 
+ * the amount of rupees increments by the rupee value
+ * in this test the rupee value is 8 with 2 rupees avaliable
+ * */
 public class RupeeCollectedTest : MonoBehaviour {
 	GameController gc;
 
@@ -35,5 +40,5 @@ public class RupeeCollectedTest : MonoBehaviour {
 	public void outComeInt(int expected, int actual){
 		Debug.Log ("Expected: " + expected + " Actual: " + actual);
 	}
-
 }
+//finito
