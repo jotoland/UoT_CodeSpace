@@ -89,6 +89,7 @@ public class CoRoutines : MonoBehaviour {
 			setConnStatus (false, connection);
 		} else {
 			if (connection == "DB Con Success!") {
+				print ("Setting Connection Status");
 				setConnStatus (true, connection);
 			} else if (connection == "DB Con Failed") {
 				setConnStatus (false, connection);
@@ -160,7 +161,7 @@ public class CoRoutines : MonoBehaviour {
 		
 	/// Creates the account co.
 	IEnumerator CreateAccountCo(string cUserName, string cPassword){
-		
+		print ("insideCreateAccountCo");
 		string createAccountUrl = "https://tempusfugit.000webhostapp.com/usrAc/crtAc.php";
 
 		//sends messages to PHP script
@@ -189,7 +190,7 @@ public class CoRoutines : MonoBehaviour {
 
 	/// Logins the account.
 	IEnumerator LoginAccountCo(string userName, string password){
-
+		print ("inside login account");
 		string loginUrl = "https://tempusfugit.000webhostapp.com/usrAc/logAc.php";
 		WWWForm form = new WWWForm();
 
