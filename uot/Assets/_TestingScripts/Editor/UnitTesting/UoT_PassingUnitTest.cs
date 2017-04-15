@@ -13,6 +13,7 @@ namespace UoT_PassingUnitTest{
 	[Category("PassingUnitTests")]
 	internal class PassingUnitTests{
 		
+
 		[Test]
 		public void MainCameraFound(){
 			GameObject mainCamera = GameObject.Find ("Main Camera");
