@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* John G. Toland 04/14/17
+ * Integratio Test: Destroying Objects In Boundary
+ * This test is successful when the object entering the boundary
+ * has been destroyed
+ * */
 public class DestroyByBoundaryTest : MonoBehaviour {
 	private bool inBoundary;
 	Collider boundary;
@@ -28,5 +32,5 @@ public class DestroyByBoundaryTest : MonoBehaviour {
 	public void outComeString(string expected, string actual){
 		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
-		
 }
+//finito

@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* John G. Toland 4/14/17
+ * Integration Test: Spawning Rupee after Hazard is destroyed
+ * Tests is successful when a rupee spawns
+ * */
 public class SpawningRupeeTest : MonoBehaviour {
 	private GameObject rupee;
 	// Use this for initialization
@@ -22,3 +25,4 @@ public class SpawningRupeeTest : MonoBehaviour {
 		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 }
+//finito

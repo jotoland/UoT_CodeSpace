@@ -34,8 +34,8 @@ public class Login : MonoBehaviour {
 		}
 		CoRo.CheckConnection ();
 
-		//connection = PlayerPrefs.GetInt ("mConnection");
-		//print ("connection = " + connection);
+		connection = PlayerPrefs.GetInt ("mConnection");
+		print ("connection = " + connection);
 
 		if (connection == 0) {
 			CreateAccountBtn.SetActive (false);
