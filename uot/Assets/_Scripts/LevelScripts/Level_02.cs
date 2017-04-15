@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using UnityEngine.SceneManagement;
 /// <summary>
 /// Levels02.
@@ -59,7 +60,7 @@ public class Level_02 : MonoBehaviour
 	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update()
 	{
-		
+
 		///spawning the boss for level_02
 		if (bossWaveStarts)
 		{
@@ -70,7 +71,7 @@ public class Level_02 : MonoBehaviour
 		}
 
 		if(!gc.isGameOver() && NEED_NEW_LVL && !pB.GameIsPaused () && healthScript) {
-			
+
 			if (BOSS_IS_DEAD) {
 				print (healthScript.getHealth ());
 				NEED_NEW_LVL = false;
