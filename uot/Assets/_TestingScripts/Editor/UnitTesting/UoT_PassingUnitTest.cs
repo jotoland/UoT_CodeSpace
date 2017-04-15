@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using UnityEngine;
-
+/* John G. Toland 4/14/17 Unit tests using NUnit framework !!! PASSING UNIT TESTS !!!
+ * This is the script that houses the unit tests that are intented to pass NOT fail
+ * */
 namespace UoT_PassingUnitTest{
 	
 #region PassingUnitTests_UoT
@@ -18,10 +20,43 @@ namespace UoT_PassingUnitTest{
 		}
 
 		[Test]
+		public void DisplayTextFound(){
+			GameObject displayText = GameObject.Find ("DisplayText");
+			Assert.IsNotNull (displayText);
+		}
+
+		[Test]
+		public void NavGUIFound(){
+			GameObject NavGUI = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
+			Assert.IsNotNull (NavGUI);
+		}
+
+		[Test]
+		public void NavGUIActiveAndEnabled(){
+			GameObject NavGUI = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
+			PauseNavGUI pB = NavGUI.GetComponentInChildren<PauseNavGUI> ();
+			Assert.IsTrue (pB.isActiveAndEnabled);
+		}
+			
+		[Test]
 		public void ShipListFound(){
 			GameObject shipList = GameObject.Find ("ShipList");
 			Assert.IsNotNull (shipList);
 			Assert.IsTrue(shipList.CompareTag ("ShipList"));
+		}
+
+		[Test]
+		public void AudioMixerFound(){
+			GameObject audio = GameObject.Find ("AudioMixerControl");
+			Assert.IsNotNull (audio);
+			Assert.IsTrue(audio.CompareTag ("Mixer"));
+		}
+
+		[Test]
+		public void AudioMixerScriptIsActiveAndEnabled(){
+			GameObject audio = GameObject.Find ("AudioMixerControl");
+			MixerLevels audioScript = audio.GetComponent<MixerLevels> ();
+			Assert.IsTrue (audioScript.isActiveAndEnabled);
 		}
 
 		[Test]
@@ -52,6 +87,13 @@ namespace UoT_PassingUnitTest{
 		}
 
 		[Test]
+		public void CoRoutinesIsActiveAndEnabled(){
+			GameObject testCoRoutine = GameObject.Find ("CoRoutines");
+			CoRoutines CoRo = testCoRoutine.GetComponent<CoRoutines> ();
+			Assert.IsTrue (CoRo.isActiveAndEnabled);
+		}
+
+		[Test]
 		public void ShipIsActiveInHierarchy(){
 			GameObject activeShip = GameObject.Find ("Player_00");
 			Assert.IsTrue (activeShip.activeInHierarchy);
@@ -70,6 +112,14 @@ namespace UoT_PassingUnitTest{
 			GameObject activeShip = GameObject.Find ("Player_00");
 			Collider shipCollider = activeShip.GetComponent <Collider> ();
 			Assert.IsTrue (shipCollider.isTrigger);
+		}
+
+		[Test]
+		public void MenuIsActiveInHierarchy(){
+			GameObject menu = GameObject.Find ("Menu");
+			menu.SetActive (false);
+			Assert.IsFalse (menu.activeInHierarchy);
+			menu.SetActive (true);
 		}
 
 		[Test]
@@ -105,10 +155,11 @@ namespace UoT_PassingUnitTest{
 			GameObject gameController = GameObject.Find ("GameController");
 			GameController gcScript = gameController.GetComponent<GameController> ();
 			gcScript.setTest ();
-			gcScript.AddLife (1);
-			Assert.AreEqual (1, gcScript.getLives ());
 			gcScript.clearValues ();
-			Assert.AreEqual (0, gcScript.getLives ());
+			gcScript.AddLife (1);
+			Assert.AreEqual (2, gcScript.getLives ());
+			gcScript.clearValues ();
+			Assert.AreEqual (1, gcScript.getLives ());
 		}
 
 		[Test]
