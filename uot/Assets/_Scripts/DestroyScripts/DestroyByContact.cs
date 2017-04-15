@@ -7,8 +7,7 @@ using UnityEngine;
 /// 02/20/17 Richard O'Neal
 /// used to destroy hazards with bolts or collisions
 
-/// 03/20/2017 Andrew Salopek
-//  04/14/2017 Gerard Fierro - Boss boundary 
+/// 03/20/2017 Andrew Salopek 
 /// </summary>
 public class DestroyByContact : MonoBehaviour {
 
@@ -34,7 +33,7 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Lvl05Boss") || other.CompareTag("BossLvl_02") ||
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Lvl05Boss") || 
 			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp" || other.tag== "BossBoundary" ){
 			return;
 		}

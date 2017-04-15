@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour {
 	private Levels lvl;
 	private LevelScript_01 lvl_01;
 	private Levels05 lvl_05;
-	private Level_02 lvl_02;			
+	//private Level_02 lvl_02;			
 	public GameObject[] shipList;
 	public GameObject[] rupeeBox;
 	public Transform spawnPlayer;
@@ -88,10 +88,10 @@ public class GameController : MonoBehaviour {
 			pB = pBObject.GetComponent <PauseNavGUI> ();
 		}
 
-		GameObject lvl_02Object = GameObject.FindGameObjectWithTag ("GameController");
+		/*GameObject lvl_02Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_02Object != null) {
 			lvl_02 = lvl_02Object.GetComponent <Level_02> ();
-		}
+		}*/
 
 		GameObject lvl_05Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_05Object != null) {
@@ -144,7 +144,7 @@ public class GameController : MonoBehaviour {
 			lvl_01.StartLvlOne ();
 		} else if (currentScene.name == "Level_02") {
 			//Begin Hazard spawn level_02.
-			lvl_02.StartLvlTwo ();								
+			lvl.StartGenericLvl ();								
 			//StartCoroutine (SpawnWavesLevel_02 ());
 		} else if (currentScene.name == "Level_03") {
 			//Begin Hazard spawn level_03
