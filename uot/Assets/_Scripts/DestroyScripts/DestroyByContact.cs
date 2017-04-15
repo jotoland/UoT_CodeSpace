@@ -80,6 +80,18 @@ public class DestroyByContact : MonoBehaviour {
 //			Destroy (other.gameObject);
 
 		}
+		if (CompareTag("BossWeapon")) {
+			if(other.CompareTag("Bolt")){
+				return;
+			}
+				
+		}
+		if (CompareTag("Enemy")) {
+			if(other.CompareTag("BossWeapon")){
+				return;
+			}
+
+		}
 		gameController.AddScore (scoreValue);
 		Destroy(gameObject);
 		Destroy (other.gameObject);

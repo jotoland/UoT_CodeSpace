@@ -15,6 +15,7 @@ public class StopByBoundary : MonoBehaviour {
 			boss.GetComponent<Rigidbody> ().velocity = transform.forward * 0;
 			boss.GetComponent<EvasiveManeuver>().enabled = true;
 			boss.GetComponent<WeaponController>().enabled = true;
+			//boss.GetComponent<Lvl05BossHealth>().enabled = true;
 
 			}
 	}
