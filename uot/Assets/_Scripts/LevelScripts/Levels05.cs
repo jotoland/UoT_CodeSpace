@@ -18,12 +18,14 @@ public class Levels05 : MonoBehaviour
 {
 	//all level variables
 	//Scene currentScene;
+
 	private GameController gc;
 	public GameObject[] hazards;
 	public GameObject FinalEnemy;
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public float spawnWait;
+
 	public float startWait;
 	public float waveWait;
 	public int numOfWavesInLvl;
@@ -32,9 +34,12 @@ public class Levels05 : MonoBehaviour
 	public int BossHazardCount;
 
 
+
+
 	// Use this for initialization
 	void Start()
 	{
+		
 		//currentScene = SceneManager.GetActiveScene ();
 		//get instance of gameController for access to game progress fucntions within your level
 		GameObject gcObject = GameObject.FindGameObjectWithTag("GameController");
@@ -47,9 +52,12 @@ public class Levels05 : MonoBehaviour
 	// Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
 	void Update()
 	{
+		
 		///spawning the boss fight for level_05
+
 		if (beginBossFight)
 		{
+			
 			StartCoroutine(SpawnBosslvl05());
 			beginBossFight = false;
 		}
@@ -64,6 +72,7 @@ public class Levels05 : MonoBehaviour
 		StartCoroutine(SpawnWaves());
 	}
 	#endregion
+
 
 	/// <summary>
 	/// Checks the player progress in lvl.
@@ -101,8 +110,8 @@ public class Levels05 : MonoBehaviour
 		}
 		else
 		{
-			spawnWaveCount++;
-			print("wave count = " + spawnWaveCount);
+			
+			//print("wave count = " + spawnWaveCount);
 			if (gc.isGameOver())
 			{
 				gc.setRestart(true);
@@ -191,10 +200,12 @@ public class Levels05 : MonoBehaviour
 	/// <returns>The boss wave level 05.</returns>
 	IEnumerator SpawnBosslvl05()
 	{
+		
 		yield return new WaitForSeconds(startWait);
 		//while (true)
 		//{
-				GameObject bossObject = GameObject.FindGameObjectWithTag("Lvl05Boss");
+				//approach.Play();
+//				GameObject bossObject = GameObject.FindGameObjectWithTag("Lvl05Boss");
 				GameObject boss = FinalEnemy;
 				Vector3 spawnPosition = new Vector3(0, 0, 25);
 				Quaternion spawnRotation = Quaternion.identity;
@@ -203,15 +214,20 @@ public class Levels05 : MonoBehaviour
 			
 			yield return new WaitForSeconds(waveWait);
 			//spawnWaveCount++;
+			
 			print("wave count inside bosswave = " + spawnWaveCount);
-			checkPlayerProgressInLvl (true);
+		//while (true) {
+		//	yield return new WaitForSeconds(1f);
+		//	checkPlayerProgressInLvl (true);
+		//}
 			//if (!checkPlayerProgressInLvl(false))
 			//{
 			//	break;
 			//}
-			/*if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver())
+
+		if (Lvl05BossHealth.Health == 0 && !gc.isGameOver())
 			{
-				wgc.levelCompleted();
+				gc.levelCompleted();
 				yield return new WaitForSeconds(gc.getLoadLvlWait());
 				if (gc.getLvlCount() >= 5)
 				{
@@ -222,10 +238,12 @@ public class Levels05 : MonoBehaviour
 				{
 					SceneManager.LoadScene(gc.getLvlCount() + 2);
 				}
-			}*/
+			}
 		//}
 	}
 
+
 	#endregion
+
 }
 //finito

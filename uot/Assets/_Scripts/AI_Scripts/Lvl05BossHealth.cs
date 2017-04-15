@@ -6,18 +6,31 @@ using UnityEngine;
 // if so deduct health if health = 0 then destroy the game object
 public class Lvl05BossHealth : MonoBehaviour {
 
-	private int Health;
+	public static int Health;
+	private GameController gc;
+
+	public GameObject explosion;
+
 
 	void Start(){
-		Health = 20;
+		Health = 120;
+		GameObject gcObject = GameObject.FindGameObjectWithTag("GameController");
+		if (gcObject != null)
+		{
+			gc = gcObject.GetComponent<GameController>();
+		}
 	}
 	void OnTriggerEnter(Collider other) 
 	{
-		if(other.CompareTag("Bolt"))
+		if(other.CompareTag("Bolt")|| other.CompareTag("Missile"))
 			{
 			if (Health != 0) {
 				Health = Health - 1;
 				Debug.Log ("Health deducted = " + Health);
+				gameObject.GetComponent<Animation>().Play ();
+
+				Destroy(other.gameObject);
+
 			}
 
 				
@@ -26,13 +39,20 @@ public class Lvl05BossHealth : MonoBehaviour {
 	}
 
 	void Update(){
-		print (Health);
+		//print (Health);
 		if(Health == 0)
 		{
 			GetComponent<Mover> ().enabled = false;
 			GetComponent<EvasiveManeuver> ().enabled = false;
 			GetComponent<WeaponController> ().enabled = false;
-			GameObject.Find ("GameController").GetComponent<Level_02> ().setBOSS_IS_DEAD (true);
+			gc.levelCompleted ();
+			Vector3 Position = new Vector3(0, 0, 10);
+			Quaternion Rotation = Quaternion.identity;
+			Instantiate (explosion, Position, Rotation);
+			AudioSource audio = gameObject.GetComponent<AudioSource >();
+			audio.PlayOneShot((AudioClip)Resources.Load("Boss Death audio"));
+			//Levels05.LoadNewLvl ();
+			//GameObject.Find ("GameController").GetComponent<Level_02> ().setBOSS_IS_DEAD (true);
 			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 			Destroy (this, 3f);
 		}
