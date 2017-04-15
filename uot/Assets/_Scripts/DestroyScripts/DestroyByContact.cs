@@ -34,9 +34,17 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
+        
+        if(gameObject.tag == "Boss_Bolt_4")
+        {
+            if(other.tag == "Bolt")
+            {
+                return;
+            }
+        }
 		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Lvl05Boss") ||
-			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp" || other.tag== "BossBoundary" ){
-			return;
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp" || other.tag == "BossBoundary"){
+			return; 
 		}
 		//creating explosion for asteroids being shot
 		if (explosion != null) {
