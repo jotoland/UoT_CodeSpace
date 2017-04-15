@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour {
 	private Levels lvl;
 	private LevelScript_01 lvl_01;
 	private Levels05 lvl_05;
+	//private Level_02 lvl_02;			
 	public GameObject[] shipList;
 	public GameObject[] rupeeBox;
 	public Transform spawnPlayer;
@@ -87,17 +88,23 @@ public class GameController : MonoBehaviour {
 			pB = pBObject.GetComponent <PauseNavGUI> ();
 		}
 
+		/*GameObject lvl_02Object = GameObject.FindGameObjectWithTag ("GameController");
+		if (lvl_02Object != null) {
+			lvl_02 = lvl_02Object.GetComponent <Level_02> ();
+		}*/
+
 		GameObject lvl_05Object = GameObject.FindGameObjectWithTag ("GameController");
 		if (lvl_05Object != null) {
 			//print ("level scirpt assigned");
 			lvl_05 = lvl_05Object.GetComponent <Levels05> ();
 		}
-
+		//Getting the currently loaded scene using the SceneManager.
+		currentScene = SceneManager.GetActiveScene();
 
 		connection = PlayerPrefs.GetInt ("mConnection");
 		currentShip = PlayerPrefs.GetInt ("mShip");
 
-		if (connection == 1) {
+		if (connection == 1 && !currentScene.name.Contains ("Test")) {
 			//This coroutine is local to the GameController class. 
 			//This needs to wait one second while data is fetched from the DB,
 			//then the GetData Coroutine gets the items from the items array and places them respectively.
@@ -129,8 +136,7 @@ public class GameController : MonoBehaviour {
 		scoreText.text = "";
 		restartButton.SetActive(false);
 
-		//Getting the currently loaded scene using the SceneManager.
-		currentScene = SceneManager.GetActiveScene();
+
 
 		///Check the name of the currently loaded scene.
 		if (currentScene.name == "Level_01") {
@@ -138,7 +144,7 @@ public class GameController : MonoBehaviour {
 			lvl_01.StartLvlOne ();
 		} else if (currentScene.name == "Level_02") {
 			//Begin Hazard spawn level_02.
-			lvl.StartGenericLvl ();
+			lvl.StartGenericLvl ();								
 			//StartCoroutine (SpawnWavesLevel_02 ());
 		} else if (currentScene.name == "Level_03") {
 			//Begin Hazard spawn level_03
@@ -158,7 +164,7 @@ public class GameController : MonoBehaviour {
 
 	/// getting the users score from items array no DB interaction but still waits for 1 second for DB interaction with CoRo
 	IEnumerator GetData(){
-		yield return new WaitForSeconds(2);
+		yield return new WaitForSeconds(3);
 		userName = PlayerPrefs.GetString ("mUsername");
 		levelCount = PlayerPrefs.GetInt ("mLevel");
 		score = int.Parse(PlayerPrefs.GetString ("mPoints"));
@@ -227,31 +233,7 @@ public class GameController : MonoBehaviour {
 			gameOverText.text = "";
 		}
 	}
-	#region USED FOR UNIT TESTS
-	public int getRupeeCount(){
-		return rupees;
-	}
 
-	public int getScore(){
-		return score;
-	}
-
-	public int getLives(){
-		return lives;
-	}
-
-	public void clearValues(){
-		rupees = 0;
-		score = 0;
-		lives = 0;
-		scoreUpdateInterval = 0;
-		rupeeUpdateInterval = 0;
-	}
-
-	public void setTest(){
-		Test = true;
-	}
-	#endregion
 	public bool isGameOver(){
 		return gameOver;
 	}
@@ -299,7 +281,12 @@ public class GameController : MonoBehaviour {
 		//if interval reached the start coroutine to update the DB
 		if (scoreUpdateInterval > 50) {
 			scoreUpdateInterval = 0;
-			CoRo.UpdateData (userName, score, "pts");
+			if (!Test) {
+				CoRo.UpdateData (userName, score, "pts");
+			} else {
+				Debug.Log ("Rnning Tests: Database call Ignored");
+			}
+
 		}
 		UpdateScore ();
 
@@ -310,7 +297,11 @@ public class GameController : MonoBehaviour {
 		rupeeUpdateInterval += newRupeeValue;
 		if (rupeeUpdateInterval > 10) {
 			rupeeUpdateInterval = 0;
-			CoRo.UpdateData (userName, rupees, "rup");
+			if (!Test) {
+				CoRo.UpdateData (userName, rupees, "rup");
+			} else {
+				Debug.Log ("Rnning Tests: Database call Ignored");
+			}
 		}
 		UpdateRupees ();
 	}
@@ -319,6 +310,8 @@ public class GameController : MonoBehaviour {
 		lives += newLifeValue;
 		if (!Test) {
 			CoRo.UpdateData (userName, lives, "liv");
+		} else {
+			Debug.Log ("Rnning Tests: Database call Ignored");
 		}
 		UpdateLife ();
 	}
@@ -387,6 +380,42 @@ public class GameController : MonoBehaviour {
 		CoRo.UpdateData (userName, score, "pts");
 		CoRo.UpdateData (userName, rupees, "rup");
 	}
+
+#region USED FOR UNIT TESTS
+	public int getRupeeCount(){
+		return rupees;
+	}
+
+	public int getScore(){
+		return score;
+	}
+
+	public int getLives(){
+		return lives;
+	}
+
+	public int getScoreIntervalValue(){
+		return scoreUpdateInterval;
+	}
+
+	public int getRupeeIntervalValue(){
+		return rupeeUpdateInterval;
+	}
+
+	public void clearValues(){
+		rupees = 0;
+		score = 0;
+		lives = 1;
+		scoreUpdateInterval = 0;
+		rupeeUpdateInterval = 0;
+		missileCount = 0;
+	}
+
+	public void setTest(){
+		Test = true;
+	}
+#endregion
+
 
 }
 //finito

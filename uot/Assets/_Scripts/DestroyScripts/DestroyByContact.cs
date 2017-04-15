@@ -8,6 +8,7 @@ using UnityEngine;
 /// used to destroy hazards with bolts or collisions
 
 /// 03/20/2017 Andrew Salopek
+/// 04/14/2017 Nicholas Muirhead
 
 /// </summary>
 public class DestroyByContact : MonoBehaviour {
