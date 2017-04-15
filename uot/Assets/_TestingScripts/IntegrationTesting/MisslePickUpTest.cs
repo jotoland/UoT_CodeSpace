@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* John G. Toland 04/14/17
+ * Integration Test: Picking Up Missle Pickups
+ * This test is successful when a player picks up
+ * a missle pickup and the missile count increments by 1.
+ * There is only one missle pickup avaliable in this test.
+ * */
 public class MisslePickUpTest : MonoBehaviour {
 	GameController gc;
 
@@ -30,3 +35,4 @@ public class MisslePickUpTest : MonoBehaviour {
 		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 }
+//finito

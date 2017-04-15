@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/* John G. Toland 04/14/17
+ * Integration Test: Collecting Lives
+ * This test is successful when the player collects One Up pickups 
+ * and there lives incremenets by 1. In this test there are 4 One 
+ * Up pickups avaliable.
+ * */
 public class OneUpCollectTest : MonoBehaviour {
 	GameController gc;
 
@@ -30,3 +35,4 @@ public class OneUpCollectTest : MonoBehaviour {
 		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 }
+//finito
