@@ -7,9 +7,7 @@ using UnityEngine;
 /// 02/20/17 Richard O'Neal
 /// used to destroy hazards with bolts or collisions
 
-/// 03/20/2017 Andrew Salopek
-/// 04/14/2017 Nicholas Muirhead
-
+/// 03/20/2017 Andrew Salopek 
 /// </summary>
 public class DestroyByContact : MonoBehaviour {
 
@@ -35,17 +33,9 @@ public class DestroyByContact : MonoBehaviour {
 	void OnTriggerEnter(Collider other) 
 	{
 		///do not destroy if its inside the boundary
-        
-        if(gameObject.tag == "Boss_Bolt_4")
-        {
-            if(other.tag == "Bolt")
-            {
-                return;
-            }
-        }
-		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Lvl05Boss") ||
-			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp" || other.tag == "BossBoundary"){
-			return; 
+		if (other.CompareTag("Boundary") || other.CompareTag("Enemy") || other.CompareTag("Lvl05Boss") || 
+			other.CompareTag("Rupee") || other.tag == "PowerStar" || other.tag == "OneUpHeart" || other.tag == "PickUp" || other.tag== "BossBoundary" ){
+			return;
 		}
 		//creating explosion for asteroids being shot
 		if (explosion != null) {
