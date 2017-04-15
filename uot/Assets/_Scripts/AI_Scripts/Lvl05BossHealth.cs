@@ -8,12 +8,16 @@ public class Lvl05BossHealth : MonoBehaviour {
 
 	public static int Health;
 	private GameController gc;
-
+	public GameObject missileExplosion;
 	public GameObject explosion;
-
+	public GameObject enemy;
+	private bool hasSpawned1 = false;
+	private bool hasSpawned2 = false;
+	private bool hasSpawned3 = false;
+	private static int HealthDeducted = 0;
 
 	void Start(){
-		Health = 120;
+		Health = 135;
 		GameObject gcObject = GameObject.FindGameObjectWithTag("GameController");
 		if (gcObject != null)
 		{
@@ -22,10 +26,13 @@ public class Lvl05BossHealth : MonoBehaviour {
 	}
 	void OnTriggerEnter(Collider other) 
 	{
-		if(other.CompareTag("Bolt")|| other.CompareTag("Missile"))
+		//check if the boss is being hit by the players bolt
+		// if so deducted one health
+		if(other.CompareTag("Bolt"))
 			{
 			if (Health != 0) {
 				Health = Health - 1;
+				HealthDeducted += 1;
 				Debug.Log ("Health deducted = " + Health);
 				gameObject.GetComponent<Animation>().Play ();
 
@@ -35,6 +42,18 @@ public class Lvl05BossHealth : MonoBehaviour {
 
 				
 			}
+		if (other.CompareTag ("Missile")) {
+
+			if (Health != 0) {
+				Health = Health - 10;
+				HealthDeducted += 10;
+				Debug.Log ("Health deducted = " + Health);
+				gameObject.GetComponent<Animation>().Play ();
+				Instantiate (missileExplosion, other.transform.position, other.transform.rotation);
+				Destroy(other.gameObject);
+
+			}
+		}
 
 	}
 
@@ -56,6 +75,32 @@ public class Lvl05BossHealth : MonoBehaviour {
 			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 			Destroy (this, 3f);
 		}
+		if(HealthDeducted == 25 && hasSpawned1 != true) {
+			
+				Vector3 spawnPosition = new Vector3 (Random.Range (-5, 5), 0, 15);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (enemy, spawnPosition, spawnRotation);
+				hasSpawned1 = true;
+		}
+		if(HealthDeducted == 50 && hasSpawned2 != true) {
+
+			Vector3 spawnPosition = new Vector3 (Random.Range (-5, 5), 0, 15);
+			Quaternion spawnRotation = Quaternion.identity;
+			Instantiate (enemy, spawnPosition, spawnRotation);
+
+			hasSpawned2 = true;
+		}
+		if(HealthDeducted == 75 && hasSpawned3 != true) {
+
+			Vector3 spawnPosition = new Vector3 (Random.Range (-5, 5), 0, 15);
+			Quaternion spawnRotation = Quaternion.identity;
+			Instantiate (enemy, spawnPosition, spawnRotation);
+
+			hasSpawned3 = true;
+		}
+
+
+		
 	}
 	public int getHealth(){
 		return Health;
