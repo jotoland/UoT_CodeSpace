@@ -25,30 +25,25 @@ public class Login : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-		connection = PlayerPrefs.GetInt ("mConnection");
-		print ("connection = " + connection);
+		ELm.text = "";
+		//make sure the audio is not paused
+		AudioListener.pause = false;
+		GameObject CoRoObject = GameObject.FindGameObjectWithTag ("CoRoutines");
+		if (CoRoObject != null) {
+			CoRo = CoRoObject.GetComponent <CoRoutines> ();
+		}
+		CoRo.CheckConnection ();
+
+		//connection = PlayerPrefs.GetInt ("mConnection");
+		//print ("connection = " + connection);
 
 		if (connection == 0) {
 			CreateAccountBtn.SetActive (false);
 			passwordInputField.SetActive (false);
 		}
 
-		//make sure the audio is not paused
-		AudioListener.pause = false;
-
-		GameObject CoRoObject = GameObject.FindGameObjectWithTag ("CoRoutines");
-		//make sure we can access our instance of CoRo
-		if (CoRoObject != null) {
-			CoRo = CoRoObject.GetComponent <CoRoutines> ();
-		}
-
 		GameObject SLHo = GameObject.Find ("JOHNS_GUIbox");
 		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
-
-		///checking the connection
-		CoRo.CheckConnection ();
-		ELm.text = "";
 	}
 
 	public void LoginBtn(){
