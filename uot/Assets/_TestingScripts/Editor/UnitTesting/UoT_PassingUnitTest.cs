@@ -117,6 +117,12 @@ namespace UoT_PassingUnitTest{
 		[Test]
 		public void MenuIsActiveInHierarchy(){
 			GameObject menu = GameObject.Find ("Menu");
+			Assert.IsTrue (menu.activeInHierarchy);
+		}
+
+		[Test]
+		public void MenuIsNotActiveInHierarchy(){
+			GameObject menu = GameObject.Find ("Menu");
 			menu.SetActive (false);
 			Assert.IsFalse (menu.activeInHierarchy);
 			menu.SetActive (true);

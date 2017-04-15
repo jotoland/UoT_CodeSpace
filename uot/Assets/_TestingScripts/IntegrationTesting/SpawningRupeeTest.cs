@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawningRupeeTest : MonoBehaviour {
-
+	private GameObject rupee;
+	private bool foundRupee = false;
 	// Use this for initialization
 	void Start () {
 		
@@ -11,9 +12,14 @@ public class SpawningRupeeTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GameObject rupee = GameObject.FindGameObjectWithTag("Rupee");
+		rupee = GameObject.FindGameObjectWithTag("Rupee");
 		if (rupee) {
 			IntegrationTest.Pass (this.gameObject);
+			outComeString ("Rupee", rupee.tag);
 		}
+	}
+
+	public void outComeString(string expected, string actual){
+		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 }

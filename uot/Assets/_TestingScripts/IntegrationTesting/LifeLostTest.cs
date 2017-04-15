@@ -18,7 +18,12 @@ public class LifeLostTest : MonoBehaviour {
 		if (gc.isGameOver ()) {
 			if (gc.getLives () == 1) {
 				IntegrationTest.Pass (this.gameObject);
+				outComeInt (1, gc.getLives ());
 			}
 		}
+	}
+
+	public void outComeInt(int expected, int actual){
+		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 }
