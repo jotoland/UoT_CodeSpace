@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpawningRupeeTest : MonoBehaviour {
 	private GameObject rupee;
-	private bool foundRupee = false;
 	// Use this for initialization
 	void Start () {
 		
