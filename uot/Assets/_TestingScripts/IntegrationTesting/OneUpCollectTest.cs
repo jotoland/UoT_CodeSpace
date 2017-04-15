@@ -23,10 +23,10 @@ public class OneUpCollectTest : MonoBehaviour {
 	}
 
 	public void outComeString(string expected, string actual){
-		Debug.Log ("Expected: " + expected + " Actual: " + actual);
+		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 
 	public void outComeInt(int expected, int actual){
-		Debug.Log ("Expected: " + expected + " Actual: " + actual);
+		Debug.Log ("Expected: [" + expected + "] Actual: [" + actual+"]");
 	}
 }
