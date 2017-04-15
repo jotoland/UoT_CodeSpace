@@ -59,7 +59,7 @@ public class Lvl05BossHealth : MonoBehaviour {
 
 	void Update(){
 		//print (Health);
-		if(Health == 0)
+		if(Health <= 0)
 		{
 			GetComponent<Mover> ().enabled = false;
 			GetComponent<EvasiveManeuver> ().enabled = false;
