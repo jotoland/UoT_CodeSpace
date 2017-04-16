@@ -66,7 +66,7 @@ public class ShipSelection : MonoBehaviour {
 				GameObject usernameText = GameObject.Find("UserName");
 				usernameText.GetComponent <Text> ().text = userName;
 				shipList [index].SetActive (true);
-			} else {
+			} else  {
 				shipList [PlayerPrefs.GetInt ("mShip")].SetActive (true);
 			}
 		}
