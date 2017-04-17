@@ -9,13 +9,13 @@ public class Level_4_Boss_health : MonoBehaviour
     public float StartHealth;
     public float CurrentHealth;
     public GameObject explosion;
-    
+
     void OnTriggerEnter(Collider other)
     {
         //if the boss is hit with a bolt decrease the bosses health by one
         if (other.CompareTag("Bolt"))
         {
-            CurrentHealth -= 1f;
+			CurrentHealth -= 1f;
             Instantiate(explosion, transform.position, transform.rotation);
             Destroy(other.gameObject);
             Debug.Log("Health deducted");
@@ -27,7 +27,6 @@ public class Level_4_Boss_health : MonoBehaviour
             {
                 Instantiate(explosion, transform.position, transform.rotation);
             }
-            DestroyObject(gameObject);
         }
-    }
+    }		
 }
