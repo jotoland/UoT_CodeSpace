@@ -21,7 +21,7 @@ public class Level_4_Boss_AI : MonoBehaviour
     private float PercentHealth;
     private int attackchoice;
     void Start()
-    {
+    {	
         PercentHealth = gameObject.GetComponent<Level_4_Boss_health>().CurrentHealth / gameObject.GetComponent<Level_4_Boss_health>().StartHealth;
         print("PH1 " + PercentHealth);
         
