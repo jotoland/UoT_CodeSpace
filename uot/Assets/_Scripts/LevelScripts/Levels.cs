@@ -14,6 +14,8 @@ using UnityEngine.SceneManagement;
  * John G. Toland 4/10/17 Updated the detection of winning the level and Loading the next scene.
  * The earlier version was not the best way to do it.
  * */
+///Nicholas Muirhead 4/16/17
+///added lvl four boss spawn
 public class Levels : MonoBehaviour
 {
     //all level variables
@@ -28,9 +30,11 @@ public class Levels : MonoBehaviour
     public int numOfWavesInLvl;
     private int spawnWaveCount;
     private bool beginBossWaveGeneric;
+    private bool beginBoss4;
 	public int BossHazardCount;
 	private PauseNavGUI pNG;
 	public Scene currentScene;
+    public GameObject Boss4;
 
 
     // Use this for initialization
@@ -59,6 +63,10 @@ public class Levels : MonoBehaviour
         if (beginBossWaveGeneric){
 			StartCoroutine (SpawnBossWaveGeneric ());
             beginBossWaveGeneric = false;
+        }else if (beginBoss4)
+        {
+            StartCoroutine(SpawnBoss4());
+            beginBoss4 = false;
         }
     }
 
@@ -147,7 +155,7 @@ public class Levels : MonoBehaviour
                 break;
             case 4:
                 //level 4 boss wave case
-                beginBossWaveGeneric = true;                        ///used for testing
+                beginBoss4 = true;                        ///used for testing
                 break;
             case 5:
                 //level 5 boss wave case
@@ -222,5 +230,15 @@ public class Levels : MonoBehaviour
         }
     }
     #endregion
+    ///Spawn the boss for level 4
+    ///
+    IEnumerator SpawnBoss4()
+    {
+            yield return new WaitForSeconds(startWait);
+            Instantiate(Boss4);
+            yield return new WaitForSeconds(waveWait);
+            
+    }
 }
+
 //finito

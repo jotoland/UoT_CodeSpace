@@ -9,26 +9,22 @@ public class trail : MonoBehaviour {
     void Start()
     {
         StartCoroutine(waitStart());
-        StartCoroutine(trailWait());
-            
-                       
+        StartCoroutine(trailWait());    
     }
+
     IEnumerator waitStart()
     {
         yield return new WaitForSeconds(.8f);
         Instantiate(TrailComet, transform.position, Quaternion.identity);
     }
+
     IEnumerator trailWait()
     {
-        while(gameObject != null&& gameObject.activeInHierarchy)
+        while (gameObject != null && gameObject.activeInHierarchy)
         {
             yield return new WaitForSeconds(.4f);
             Instantiate(TrailComet, transform.position, Quaternion.identity);
         }
     }
-    /*// Update is called once per frame
-    void FixedUpdate () {
-        
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-    }*/
+
 }
