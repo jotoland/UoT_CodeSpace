@@ -257,6 +257,13 @@ public class CoRoutines : MonoBehaviour {
 				print ("[ello]: Success: DATA! updated with DataID: " + dataID);
 				if (dataID.Equals ("lvl")) {
 					PlayerPrefs.SetInt ("mLevel", data);
+				} else if (dataID.Equals ("liv")) {
+					PlayerPrefs.SetString ("mLives", data.ToString ());
+					print ("data lives = " + data.ToString ());
+				} else if (dataID.Equals ("pts")) {
+					PlayerPrefs.SetString ("mPoints", data.ToString ());
+				} else if (dataID.Equals ("rup")) {
+					PlayerPrefs.SetString ("mRupees", data.ToString ());
 				}
 			}
 		}
