@@ -31,6 +31,7 @@ public class Levels : MonoBehaviour
     private int spawnWaveCount;
     private bool beginBossWaveGeneric;
     private bool beginBoss4;
+	private bool NEED_RESPAWN;
 	public int BossHazardCount;
 	private PauseNavGUI pNG;
 	public Scene currentScene;
@@ -40,6 +41,7 @@ public class Levels : MonoBehaviour
 
     // Use this for initialization
     void Start(){
+		NEED_RESPAWN = true;
 		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
 		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
 
@@ -60,6 +62,13 @@ public class Levels : MonoBehaviour
 
     // Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
     void Update(){
+		if (currentScene.name.Contains ("Level_04")) {
+			if (gc.isPlayerDead () && NEED_RESPAWN && !gc.isGameOver()) {
+				StartCoroutine(ReSpawnLvl_04());
+
+			}
+		}
+
         ///spawning the boss wave for level_01
         if (beginBossWaveGeneric){
 			StartCoroutine (SpawnBossWaveGeneric ());
@@ -86,7 +95,7 @@ public class Levels : MonoBehaviour
             if (gc.isGameOver()){
                 gc.setRestart(true);
                 return false;
-            }else if (gc.isPlayerDead()){
+			}else if (gc.isPlayerDead() && !currentScene.name.Contains ("Level_04")){
                 spawnWaveCount = 0;
                 print("inside player is dead");
                 gc.ReSpawn();
@@ -106,7 +115,7 @@ public class Levels : MonoBehaviour
 			if (gc.isGameOver ()) {
 				gc.setRestart (true);
 				return false;
-			} else if (gc.isPlayerDead ()) {
+			} else if (gc.isPlayerDead () && !currentScene.name.Contains ("Level_04")) {
 				spawnWaveCount = numOfWavesInLvl;
 				gc.ReSpawn ();
 				gc.setPlayerDead (false);
@@ -258,6 +267,16 @@ public class Levels : MonoBehaviour
 			yield return new WaitForSeconds (waveWait);
 		}
     }
+
+	IEnumerator ReSpawnLvl_04(){
+		NEED_RESPAWN = false;
+		yield return new WaitForSeconds (2f);
+		print ("inside player is dead");
+		gc.ReSpawn ();
+		gc.setPlayerDead (false);
+		yield return new WaitForSeconds (0);
+		NEED_RESPAWN = true;
+	}
 }
 
 //finito
