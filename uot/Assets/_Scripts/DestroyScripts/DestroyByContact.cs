@@ -65,7 +65,9 @@ public class DestroyByContact : MonoBehaviour {
 		//creating explosion for asteroids being shot
 		if (explosion != null) {
 			Instantiate (explosion, transform.position, transform.rotation);
-			gameController.spawnRupee (transform.position, other.transform.rotation);
+			if (gameController != null) {
+				gameController.spawnRupee (transform.position, other.transform.rotation);
+			}
 		}
 
 		if (other.tag == "Missile") {
