@@ -35,6 +35,7 @@ public class Levels : MonoBehaviour
 	private PauseNavGUI pNG;
 	public Scene currentScene;
     public GameObject Boss4;
+	public GameObject explosion;
 
 
     // Use this for initialization
@@ -110,12 +111,12 @@ public class Levels : MonoBehaviour
 				gc.ReSpawn ();
 				gc.setPlayerDead (false);
 				return true;
-			} else if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver ()) {
-				StartCoroutine(LoadNewLvl());
+			} else if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver () && currentScene.name != "Level_04") {
+				StartCoroutine (LoadNewLvl ());
 				return false;
 			} else if (pNG.isLEFT_SCENE ()) {
 				return false;
-			} else {
+			}else {
 				return true;
 			}
         }
@@ -234,10 +235,28 @@ public class Levels : MonoBehaviour
     ///
     IEnumerator SpawnBoss4()
     {
-            yield return new WaitForSeconds(startWait);
-            Instantiate(Boss4);
-            yield return new WaitForSeconds(waveWait);
-            
+        yield return new WaitForSeconds(startWait);
+		Vector3 spawnPosition = new Vector3(0, spawnValues.y, spawnValues.z);
+		Instantiate(Boss4, spawnPosition, this.gameObject.transform.rotation);
+		GameObject BossClone = GameObject.Find ("Level_4_Boss(Clone)");
+		if (BossClone) {
+			print ("hellow world");
+		}
+		while (true) {
+			yield return new WaitForSeconds (1f);
+			checkPlayerProgressInLvl (false);
+			float bossHealth = BossClone.GetComponent < Level_4_Boss_health >().CurrentHealth;
+			print ("Boss Health = " + bossHealth);
+			if (!gc.isGameOver () && bossHealth <= 0.0f) {
+				yield return new WaitForSeconds (0.8f);
+				// adding Richards explosion thanks Rich!! this is a good asset.
+				Instantiate(explosion, BossClone.transform.position, BossClone.transform.rotation);
+				GameObject.Destroy (BossClone);
+				StartCoroutine(LoadNewLvl());
+				break;
+			}
+			yield return new WaitForSeconds (waveWait);
+		}
     }
 }
 
