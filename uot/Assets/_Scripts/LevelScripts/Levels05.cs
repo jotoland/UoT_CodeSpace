@@ -18,12 +18,14 @@ public class Levels05 : MonoBehaviour
 {
 	//all level variables
 	//Scene currentScene;
+	private SceneLoaderHandler SLH;
 	private GameController gc;
 	public GameObject[] hazards;
 	public GameObject FinalEnemy;
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public float spawnWait;
+
 	public float startWait;
 	public float waveWait;
 	public int numOfWavesInLvl;
@@ -31,10 +33,11 @@ public class Levels05 : MonoBehaviour
 	private bool beginBossFight;
 	public int BossHazardCount;
 
-
 	// Use this for initialization
 	void Start()
 	{
+		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
+		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
 		//currentScene = SceneManager.GetActiveScene ();
 		//get instance of gameController for access to game progress fucntions within your level
 		GameObject gcObject = GameObject.FindGameObjectWithTag("GameController");
@@ -55,7 +58,7 @@ public class Levels05 : MonoBehaviour
 		}
 	}
 
-	#region methodsToStartCoroutines
+#region methodsToStartCoroutines
 	/// <summary>
 	/// Starts the generic lvl Coroutine.
 	/// </summary>
@@ -63,7 +66,8 @@ public class Levels05 : MonoBehaviour
 	{
 		StartCoroutine(SpawnWaves());
 	}
-	#endregion
+#endregion
+
 
 	/// <summary>
 	/// Checks the player progress in lvl.
@@ -101,8 +105,6 @@ public class Levels05 : MonoBehaviour
 		}
 		else
 		{
-			spawnWaveCount++;
-			print("wave count = " + spawnWaveCount);
 			if (gc.isGameOver())
 			{
 				gc.setRestart(true);
@@ -155,11 +157,8 @@ public class Levels05 : MonoBehaviour
 		}
 	}
 
-	#region GenericLvl waveSpawning
-	/// <summary>
+#region waveSpawning
 	/// Spawns the waves.
-	/// </summary>
-	/// <returns>The waves.</returns>
 	IEnumerator SpawnWaves()
 	{
 		///we must wait for 3 seconds for the database to load and update the new information for each level.
@@ -184,48 +183,45 @@ public class Levels05 : MonoBehaviour
 			}
 		}
 	}
-
-	/// <summary>
+		
 	/// Spawns the boss wave level 05.
-	/// </summary>
-	/// <returns>The boss wave level 05.</returns>
 	IEnumerator SpawnBosslvl05()
 	{
+		
 		yield return new WaitForSeconds(startWait);
-		//while (true)
-		//{
-				GameObject bossObject = GameObject.FindGameObjectWithTag("Lvl05Boss");
-				GameObject boss = FinalEnemy;
-				Vector3 spawnPosition = new Vector3(0, 0, 25);
-				Quaternion spawnRotation = Quaternion.identity;
-				Instantiate(boss, spawnPosition, spawnRotation);
-				yield return new WaitForSeconds(0.1f);
-			
-			yield return new WaitForSeconds(waveWait);
-			//spawnWaveCount++;
-			print("wave count inside bosswave = " + spawnWaveCount);
-			checkPlayerProgressInLvl (true);
-			//if (!checkPlayerProgressInLvl(false))
-			//{
-			//	break;
-			//}
-			/*if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver())
-			{
-				wgc.levelCompleted();
-				yield return new WaitForSeconds(gc.getLoadLvlWait());
-				if (gc.getLvlCount() >= 5)
-				{
-					gc.resetLvlCount();
-					SceneManager.LoadScene(gc.getLvlCount());
-				}
-				else
-				{
-					SceneManager.LoadScene(gc.getLvlCount() + 2);
-				}
-			}*/
-		//}
+	
+		//approach.Play();
+//		GameObject bossObject = GameObject.FindGameObjectWithTag("Lvl05Boss");
+		GameObject boss = FinalEnemy;
+		Vector3 spawnPosition = new Vector3(0, 0, 25);
+		Quaternion spawnRotation = Quaternion.identity;
+		Instantiate(boss, spawnPosition, spawnRotation);
+		while (true) {
+			yield return new WaitForSeconds (0.1f);
+			checkPlayerProgressInLvl (false);
+			if (Lvl05BossHealth.Health == 0 && !gc.isGameOver ()) {
+				StartCoroutine(LoadNewLvl());
+				break;
+			}
+			yield return new WaitForSeconds (waveWait);
+		}
 	}
+		
+	IEnumerator LoadNewLvl(){
+		yield return new WaitForSeconds (3);
+		if (gc.getLvlCount() >= 5){
+			gc.levelCompleted();
+			gc.resetLvlCount();
+			yield return new WaitForSeconds (3);
+			SLH.LoadNewSceneInt (1);
+		}else{
+			gc.levelCompleted ();
+			yield return new WaitForSeconds (3);
+			//level count + 3 (compensation for the login scene and player seleciton scene)
+			SLH.LoadNewSceneInt (gc.getLvlCount ()+3);
+		}
+	}
+#endregion
 
-	#endregion
 }
 //finito

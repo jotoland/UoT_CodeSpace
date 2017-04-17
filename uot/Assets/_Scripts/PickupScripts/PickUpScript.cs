@@ -70,12 +70,10 @@ public class PickUpScript : MonoBehaviour {
 	public void OnTriggerEnter(Collider other){
 		//if the other object (not the one the script is on) is the player then let the player pick it up!
 		if (other.tag == "Player") {
-			print (other.tag);
 			if (isScaling) {
 				isScaling = false;
 			}
 			GetComponent<AudioSource>().Play ();
-			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 
 			//if it is tagged RUPEE then do this
 			if (gameObject.tag == "Rupee") {
@@ -91,6 +89,7 @@ public class PickUpScript : MonoBehaviour {
 				gameController.AddMissiles (MissilePickUp);
 			}
 
+			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 			Object.Destroy (gameObject, 3f);
 
 		}

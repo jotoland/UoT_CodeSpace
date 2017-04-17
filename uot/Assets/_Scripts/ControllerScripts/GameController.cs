@@ -98,12 +98,13 @@ public class GameController : MonoBehaviour {
 			//print ("level scirpt assigned");
 			lvl_05 = lvl_05Object.GetComponent <Levels05> ();
 		}
-
+		//Getting the currently loaded scene using the SceneManager.
+		currentScene = SceneManager.GetActiveScene();
 
 		connection = PlayerPrefs.GetInt ("mConnection");
 		currentShip = PlayerPrefs.GetInt ("mShip");
 
-		if (connection == 1) {
+		if (connection == 1 && !currentScene.name.Contains ("Test")) {
 			//This coroutine is local to the GameController class. 
 			//This needs to wait one second while data is fetched from the DB,
 			//then the GetData Coroutine gets the items from the items array and places them respectively.
@@ -135,8 +136,7 @@ public class GameController : MonoBehaviour {
 		scoreText.text = "";
 		restartButton.SetActive(false);
 
-		//Getting the currently loaded scene using the SceneManager.
-		currentScene = SceneManager.GetActiveScene();
+
 
 		///Check the name of the currently loaded scene.
 		if (currentScene.name == "Level_01") {
@@ -233,31 +233,7 @@ public class GameController : MonoBehaviour {
 			gameOverText.text = "";
 		}
 	}
-	#region USED FOR UNIT TESTS
-	public int getRupeeCount(){
-		return rupees;
-	}
 
-	public int getScore(){
-		return score;
-	}
-
-	public int getLives(){
-		return lives;
-	}
-
-	public void clearValues(){
-		rupees = 0;
-		score = 0;
-		lives = 0;
-		scoreUpdateInterval = 0;
-		rupeeUpdateInterval = 0;
-	}
-
-	public void setTest(){
-		Test = true;
-	}
-	#endregion
 	public bool isGameOver(){
 		return gameOver;
 	}
@@ -305,7 +281,12 @@ public class GameController : MonoBehaviour {
 		//if interval reached the start coroutine to update the DB
 		if (scoreUpdateInterval > 50) {
 			scoreUpdateInterval = 0;
-			CoRo.UpdateData (userName, score, "pts");
+			if (!Test) {
+				CoRo.UpdateData (userName, score, "pts");
+			} else {
+				Debug.Log ("Rnning Tests: Database call Ignored");
+			}
+
 		}
 		UpdateScore ();
 
@@ -316,7 +297,11 @@ public class GameController : MonoBehaviour {
 		rupeeUpdateInterval += newRupeeValue;
 		if (rupeeUpdateInterval > 10) {
 			rupeeUpdateInterval = 0;
-			CoRo.UpdateData (userName, rupees, "rup");
+			if (!Test) {
+				CoRo.UpdateData (userName, rupees, "rup");
+			} else {
+				Debug.Log ("Rnning Tests: Database call Ignored");
+			}
 		}
 		UpdateRupees ();
 	}
@@ -325,6 +310,8 @@ public class GameController : MonoBehaviour {
 		lives += newLifeValue;
 		if (!Test) {
 			CoRo.UpdateData (userName, lives, "liv");
+		} else {
+			Debug.Log ("Rnning Tests: Database call Ignored");
 		}
 		UpdateLife ();
 	}
@@ -393,6 +380,42 @@ public class GameController : MonoBehaviour {
 		CoRo.UpdateData (userName, score, "pts");
 		CoRo.UpdateData (userName, rupees, "rup");
 	}
+
+#region USED FOR UNIT TESTS
+	public int getRupeeCount(){
+		return rupees;
+	}
+
+	public int getScore(){
+		return score;
+	}
+
+	public int getLives(){
+		return lives;
+	}
+
+	public int getScoreIntervalValue(){
+		return scoreUpdateInterval;
+	}
+
+	public int getRupeeIntervalValue(){
+		return rupeeUpdateInterval;
+	}
+
+	public void clearValues(){
+		rupees = 0;
+		score = 0;
+		lives = 1;
+		scoreUpdateInterval = 0;
+		rupeeUpdateInterval = 0;
+		missileCount = 0;
+	}
+
+	public void setTest(){
+		Test = true;
+	}
+#endregion
+
 
 }
 //finito

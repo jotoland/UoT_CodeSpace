@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour {
 
 		if (numberOfSpawns < 6) {
 			numberOfSpawns++;
-			print ("number of SPawns = " + numberOfSpawns);
 		}
 	}
 

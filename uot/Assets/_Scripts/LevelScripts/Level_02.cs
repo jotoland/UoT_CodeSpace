@@ -239,7 +239,7 @@ public class Level_02 : MonoBehaviour
 		yield return new WaitForSeconds(startWait);
 		//while (true)
 		//{
-		GameObject bossObject = GameObject.FindGameObjectWithTag("BossLvl_02");
+		//GameObject bossObject = GameObject.FindGameObjectWithTag("BossLvl_02");
 		GameObject boss = FinalEnemy;
 		Vector3 spawnPosition = new Vector3(0, 0, 25);
 		Quaternion spawnRotation = Quaternion.identity;

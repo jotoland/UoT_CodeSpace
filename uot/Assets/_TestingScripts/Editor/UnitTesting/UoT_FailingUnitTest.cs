@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using UnityEngine;
-
+/* John G. Toland 4/14/17 Unit tests using NUnit framework !!! FAILING UNIT TESTS !!!
+ * This is the script that houses the unit tests that are intented to fail NOT pass
+ * */
 namespace UoT_FailingUnitTest{
 	
 	#region FailingUnitTests_UoT
