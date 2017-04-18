@@ -14,6 +14,8 @@ using UnityEngine.SceneManagement;
  * John G. Toland 4/10/17 Updated the detection of winning the level and Loading the next scene.
  * The earlier version was not the best way to do it.
  * */
+///Nicholas Muirhead 4/16/17
+///added lvl four boss spawn
 public class Levels : MonoBehaviour
 {
     //all level variables
@@ -28,13 +30,18 @@ public class Levels : MonoBehaviour
     public int numOfWavesInLvl;
     private int spawnWaveCount;
     private bool beginBossWaveGeneric;
+    private bool beginBoss4;
+	private bool NEED_RESPAWN;
 	public int BossHazardCount;
 	private PauseNavGUI pNG;
 	public Scene currentScene;
+    public GameObject Boss4;
+	public GameObject explosion;
 
 
     // Use this for initialization
     void Start(){
+		NEED_RESPAWN = true;
 		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
 		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
 
@@ -55,10 +62,21 @@ public class Levels : MonoBehaviour
 
     // Update is called once per frame, this is were you will check to see if it is time for your boss wave to spawn.
     void Update(){
+		if (currentScene.name.Contains ("Level_04")) {
+			if (gc.isPlayerDead () && NEED_RESPAWN && !gc.isGameOver()) {
+				StartCoroutine(ReSpawnLvl_04());
+
+			}
+		}
+
         ///spawning the boss wave for level_01
         if (beginBossWaveGeneric){
 			StartCoroutine (SpawnBossWaveGeneric ());
             beginBossWaveGeneric = false;
+        }else if (beginBoss4)
+        {
+            StartCoroutine(SpawnBoss4());
+            beginBoss4 = false;
         }
     }
 
@@ -77,7 +95,7 @@ public class Levels : MonoBehaviour
             if (gc.isGameOver()){
                 gc.setRestart(true);
                 return false;
-            }else if (gc.isPlayerDead()){
+			}else if (gc.isPlayerDead() && !currentScene.name.Contains ("Level_04")){
                 spawnWaveCount = 0;
                 print("inside player is dead");
                 gc.ReSpawn();
@@ -97,17 +115,17 @@ public class Levels : MonoBehaviour
 			if (gc.isGameOver ()) {
 				gc.setRestart (true);
 				return false;
-			} else if (gc.isPlayerDead ()) {
+			} else if (gc.isPlayerDead () && !currentScene.name.Contains ("Level_04")) {
 				spawnWaveCount = numOfWavesInLvl;
 				gc.ReSpawn ();
 				gc.setPlayerDead (false);
 				return true;
-			} else if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver ()) {
-				StartCoroutine(LoadNewLvl());
+			} else if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver () && currentScene.name != "Level_04") {
+				StartCoroutine (LoadNewLvl ());
 				return false;
 			} else if (pNG.isLEFT_SCENE ()) {
 				return false;
-			} else {
+			}else {
 				return true;
 			}
         }
@@ -147,7 +165,7 @@ public class Levels : MonoBehaviour
                 break;
             case 4:
                 //level 4 boss wave case
-                beginBossWaveGeneric = true;                        ///used for testing
+                beginBoss4 = true;                        ///used for testing
                 break;
             case 5:
                 //level 5 boss wave case
@@ -222,5 +240,43 @@ public class Levels : MonoBehaviour
         }
     }
     #endregion
+    ///Spawn the boss for level 4
+    ///
+    IEnumerator SpawnBoss4()
+    {
+        yield return new WaitForSeconds(startWait);
+		Vector3 spawnPosition = new Vector3(0, spawnValues.y, spawnValues.z);
+		Instantiate(Boss4, spawnPosition, this.gameObject.transform.rotation);
+		GameObject BossClone = GameObject.Find ("Level_4_Boss(Clone)");
+		if (BossClone) {
+			print ("hellow world");
+		}
+		while (true) {
+			yield return new WaitForSeconds (1f);
+			checkPlayerProgressInLvl (false);
+			float bossHealth = BossClone.GetComponent < Level_4_Boss_health >().CurrentHealth;
+			print ("Boss Health = " + bossHealth);
+			if (!gc.isGameOver () && bossHealth <= 0.0f) {
+				yield return new WaitForSeconds (0.8f);
+				// adding Richards explosion thanks Rich!! this is a good asset.
+				Instantiate(explosion, BossClone.transform.position, BossClone.transform.rotation);
+				GameObject.Destroy (BossClone);
+				StartCoroutine(LoadNewLvl());
+				break;
+			}
+			yield return new WaitForSeconds (waveWait);
+		}
+    }
+
+	IEnumerator ReSpawnLvl_04(){
+		NEED_RESPAWN = false;
+		yield return new WaitForSeconds (2f);
+		print ("inside player is dead");
+		gc.ReSpawn ();
+		gc.setPlayerDead (false);
+		yield return new WaitForSeconds (0);
+		NEED_RESPAWN = true;
+	}
 }
+
 //finito
