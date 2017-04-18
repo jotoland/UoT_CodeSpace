@@ -42,7 +42,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Start () {
-		JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
+		if (GameObject.Find ("MobileJoystick").activeInHierarchy) {
+			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
+		}
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();	//set reference to game controller component
@@ -64,7 +66,9 @@ public class PlayerController : MonoBehaviour {
 	{
 		//if mouse button is pressed instantiate the bolt and play shooting sound
 		if (CrossPlatformInputManager.GetButton ("Fire1") && Time.time > nextFire && CAN_FIRE) {
-			JIMAGE.sprite = fireSprite;
+			if (JIMAGE) {
+				JIMAGE.sprite = fireSprite;
+			}
 			nextFire = Time.time + fireRate;
 			switch (numberOfSpawns) {
 			case 1:
@@ -113,7 +117,9 @@ public class PlayerController : MonoBehaviour {
 
 			GetComponent<AudioSource> ().Play ();
 		} else if(CrossPlatformInputManager.GetButtonUp ("Fire1")) {
-			JIMAGE.sprite = joyStickSprite;
+			if (JIMAGE) {
+				JIMAGE.sprite = joyStickSprite;
+			}
 		}
 		if (CrossPlatformInputManager.GetButton ("Fire2") && Time.time > nextMissile) {
 			nextMissile = Time.time + MissileCooldown;
@@ -127,7 +133,9 @@ public class PlayerController : MonoBehaviour {
 				gameController.AddMissiles (missileShot);
 			}
 		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2")){
-			JIMAGE.sprite = joyStickSprite;
+			if (JIMAGE) {
+				JIMAGE.sprite = joyStickSprite;
+			}
 		}
 
 	}
