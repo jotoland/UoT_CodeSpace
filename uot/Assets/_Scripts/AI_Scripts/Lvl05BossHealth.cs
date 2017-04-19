@@ -17,8 +17,7 @@ public class Lvl05BossHealth : MonoBehaviour {
 	private static int HealthDeducted = 0;
 
 	void Start(){
-		//Health = 135;
-		Health = 50;
+		Health = 135;
 		GameObject gcObject = GameObject.FindGameObjectWithTag("GameController");
 		if (gcObject != null)
 		{
