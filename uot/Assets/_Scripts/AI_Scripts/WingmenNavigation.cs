@@ -7,21 +7,30 @@ using System.Collections.Generic;
 //03/20/2017
 
 public class WingmenNavigation : MonoBehaviour {
-	public Transform m_Player;
+	//public GameObject m_Player;
 	public GameObject playerExplosion;
 	private NavMeshAgent navMeshAgent;
+	private GameObject player;
 	// Use this for initialization
 	void Start () {		
 		navMeshAgent = GetComponent<NavMeshAgent> ();
 	}
-	
-	// Update is called once per frame
+		
+
 	void Update () {
-		if (m_Player) {
-			navMeshAgent.destination = m_Player.position;
-		} else {
-			Instantiate (playerExplosion, gameObject.transform.position, gameObject.transform.rotation);
-			Destroy (gameObject);
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		if (player) {
+			if (player) {
+				if (navMeshAgent.tag == "WingMan1") {
+					navMeshAgent.destination = player.transform.position + transform.right * 3;
+				} else {
+					navMeshAgent.destination = player.transform.position + transform.right*(-3);
+				}
+			}
+			GameObject enemy = GameObject.FindGameObjectWithTag ("Enemy");
+			if (enemy) {
+				navMeshAgent.destination = enemy.transform.position;
+			}
 		}
 	}
 }

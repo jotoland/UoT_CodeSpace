@@ -74,7 +74,6 @@ public class PickUpScript : MonoBehaviour {
 				isScaling = false;
 			}
 			GetComponent<AudioSource>().Play ();
-			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 
 			//if it is tagged RUPEE then do this
 			if (gameObject.tag == "Rupee") {
@@ -90,6 +89,7 @@ public class PickUpScript : MonoBehaviour {
 				gameController.AddMissiles (MissilePickUp);
 			}
 
+			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 			Object.Destroy (gameObject, 3f);
 
 		}
@@ -141,3 +141,4 @@ public class PickUpScript : MonoBehaviour {
 
 
 }
+//finito
