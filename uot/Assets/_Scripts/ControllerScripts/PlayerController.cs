@@ -36,15 +36,29 @@ public class PlayerController : MonoBehaviour {
 	public Sprite joyStickSprite;
 	public Sprite fireSprite;
 	private Image JIMAGE;
+	private GameObject virtualControls;
+	private bool MOBILE_INPUT_ENABLED;
 
 	public void setCAN_FIRE(bool canIt){
 		CAN_FIRE = canIt;
 	}
 
 	void Start () {
+
 		if (GameObject.Find ("MobileJoystick").activeInHierarchy) {
 			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
 		}
+
+		MOBILE_INPUT_ENABLED = false;
+		virtualControls = GameObject.Find ("VirtualControls");
+		if (virtualControls.transform.FindChild ("MobileJoystick").gameObject.activeInHierarchy) {
+			MOBILE_INPUT_ENABLED = true;
+			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
+		} else {
+			print ("cannot find virtual controls, Is mobile input enabled?");
+		}
+
+
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();	//set reference to game controller component
@@ -66,7 +80,11 @@ public class PlayerController : MonoBehaviour {
 	{
 		//if mouse button is pressed instantiate the bolt and play shooting sound
 		if (CrossPlatformInputManager.GetButton ("Fire1") && Time.time > nextFire && CAN_FIRE) {
+
 			if (JIMAGE) {
+
+			if (MOBILE_INPUT_ENABLED) {
+
 				JIMAGE.sprite = fireSprite;
 			}
 			nextFire = Time.time + fireRate;
@@ -116,10 +134,15 @@ public class PlayerController : MonoBehaviour {
 			}	
 
 			GetComponent<AudioSource> ().Play ();
+
 		} else if(CrossPlatformInputManager.GetButtonUp ("Fire1")) {
 			if (JIMAGE) {
 				JIMAGE.sprite = joyStickSprite;
 			}
+
+		} else if(CrossPlatformInputManager.GetButtonUp ("Fire1") && MOBILE_INPUT_ENABLED) {
+			JIMAGE.sprite = joyStickSprite;
+
 		}
 		if (CrossPlatformInputManager.GetButton ("Fire2") && Time.time > nextMissile) {
 			nextMissile = Time.time + MissileCooldown;
@@ -132,14 +155,19 @@ public class PlayerController : MonoBehaviour {
 				GetComponent<AudioSource> ().Play ();
 				gameController.AddMissiles (missileShot);
 			}
+
 		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2")){
 			if (JIMAGE) {
 				JIMAGE.sprite = joyStickSprite;
 			}
+
+		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") && MOBILE_INPUT_ENABLED){
+			JIMAGE.sprite = joyStickSprite;
+
 		}
 
 	}
-
+	}
 	void FixedUpdate(){
 
 		// moveHorizontal is how much we want to move left and right, x
