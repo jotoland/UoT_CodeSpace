@@ -31,3 +31,7 @@ sysinfo.txt
 uot/Assets/_Scenes/Level_02.unity
 
 uot/Assets/zImportedAssets/UnityTestTools/Examples/UnitTestExamples.meta
+
+uot/Assets/_Scripts/ControllerScripts/PlayerController.cs
+
+uot/Assets/_Prefabs/Hazards_Enemy/Level_04_hazards/Level_4_Boss.prefab
