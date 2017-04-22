@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.UI;
 // John G. Toland 4/10/17 Updated the contorls for CrossPlatformInput 
 // also added the toggleing of collider and mesh renderer which is called from ReSpawn() in GC
 //
@@ -32,12 +33,26 @@ public class PlayerController : MonoBehaviour {
 	private int missileShot = -1;
 	public int numberOfSpawns;
 	private bool CAN_FIRE = true;
+	public Sprite joyStickSprite;
+	public Sprite fireSprite;
+	private Image JIMAGE;
+	private GameObject virtualControls;
+	private bool MOBILE_INPUT_ENABLED;
 
 	public void setCAN_FIRE(bool canIt){
 		CAN_FIRE = canIt;
 	}
 
 	void Start () {
+		MOBILE_INPUT_ENABLED = false;
+		virtualControls = GameObject.Find ("VirtualControls");
+		if (virtualControls.transform.FindChild ("MobileJoystick").gameObject.activeInHierarchy) {
+			MOBILE_INPUT_ENABLED = true;
+			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
+		} else {
+			print ("cannot find virtual controls, Is mobile input enabled?");
+		}
+
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();	//set reference to game controller component
@@ -58,13 +73,15 @@ public class PlayerController : MonoBehaviour {
 	void Update ()
 	{
 		//if mouse button is pressed instantiate the bolt and play shooting sound
-		if (CrossPlatformInputManager.GetButton("Fire1") && Time.time > nextFire && CAN_FIRE) 
-		{
+		if (CrossPlatformInputManager.GetButton ("Fire1") && Time.time > nextFire && CAN_FIRE) {
+			if (MOBILE_INPUT_ENABLED) {
+				JIMAGE.sprite = fireSprite;
+			}
 			nextFire = Time.time + fireRate;
 			switch (numberOfSpawns) {
 			case 1:
-				Instantiate (shot, shotSpawns[0].position, shotSpawns[0].rotation);
-				Instantiate (shot, shotSpawns[1].position, shotSpawns[1].rotation);
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
+				Instantiate (shot, shotSpawns [1].position, shotSpawns [1].rotation);
 				break;
 			case 2:
 				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
@@ -102,25 +119,29 @@ public class PlayerController : MonoBehaviour {
 				Instantiate (shot, shotSpawns [6].position, shotSpawns [4].rotation);
 				break;
 			default:
-				Instantiate (shot, shotSpawns[0].position, shotSpawns[0].rotation);
+				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
 				break;
 			}	
 
-			GetComponent<AudioSource>().Play ();
+			GetComponent<AudioSource> ().Play ();
+		} else if(CrossPlatformInputManager.GetButtonUp ("Fire1") && MOBILE_INPUT_ENABLED) {
+			JIMAGE.sprite = joyStickSprite;
 		}
-		if (CrossPlatformInputManager.GetButton("Fire2") && Time.time > nextMissile) 
-		{
+		if (CrossPlatformInputManager.GetButton ("Fire2") && Time.time > nextMissile) {
 			nextMissile = Time.time + MissileCooldown;
 
 			//if the user has no missiles then cant fire missiles
-			if (gameController.getMissleCount() == 0) {
+			if (gameController.getMissleCount () == 0) {
 				return;
 			} else {
-				Instantiate(missile, missileSpawn.position, missileSpawn.rotation);
-				GetComponent<AudioSource>().Play ();
+				Instantiate (missile, missileSpawn.position, missileSpawn.rotation);
+				GetComponent<AudioSource> ().Play ();
 				gameController.AddMissiles (missileShot);
 			}
+		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") && MOBILE_INPUT_ENABLED){
+			JIMAGE.sprite = joyStickSprite;
 		}
+
 	}
 
 	void FixedUpdate(){
