@@ -28,3 +28,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+uot/Assets/_Scenes/Level_02.unity
+
+uot/Assets/zImportedAssets/UnityTestTools/Examples/UnitTestExamples.meta

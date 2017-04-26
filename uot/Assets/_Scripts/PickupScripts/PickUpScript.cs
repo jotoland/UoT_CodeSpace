@@ -46,6 +46,7 @@ public class PickUpScript : MonoBehaviour {
 	public float scaleSpeed;
 	public float scaleRate;
 	private float scaleTimer;
+	private GameObject playerControllerObject;
 
 	// Use this for initialization
 	void Start () {
@@ -54,7 +55,7 @@ public class PickUpScript : MonoBehaviour {
 		heartValue = 1;
 		///checking that we can access the instances of the other classes
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-		GameObject playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
+		playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
 		//leave as seperate if statements
 		if (gameControllerObject != null) {
 			gameController = gameControllerObject.GetComponent <GameController>();
@@ -73,7 +74,6 @@ public class PickUpScript : MonoBehaviour {
 				isScaling = false;
 			}
 			GetComponent<AudioSource>().Play ();
-			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 
 			//if it is tagged RUPEE then do this
 			if (gameObject.tag == "Rupee") {
@@ -89,6 +89,7 @@ public class PickUpScript : MonoBehaviour {
 				gameController.AddMissiles (MissilePickUp);
 			}
 
+			GetComponent<Rigidbody> ().position = new Vector3 (gameObject.transform.position.x, -20, gameObject.transform.position.z);
 			Object.Destroy (gameObject, 3f);
 
 		}
@@ -130,7 +131,14 @@ public class PickUpScript : MonoBehaviour {
 				}
 			}
 		}
+		if (playerControllerObject == null) {
+			playerControllerObject = GameObject.FindGameObjectWithTag ("Player");
+			if (playerControllerObject != null) {														
+				playerController = playerControllerObject.GetComponent <PlayerController>();			
+			}
+		}
 	}
 
 
 }
+//finito
