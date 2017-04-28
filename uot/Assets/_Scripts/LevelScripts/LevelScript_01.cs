@@ -126,6 +126,7 @@ public class LevelScript_01 : MonoBehaviour {
 		}
 		if (RESTART_THE_BEAT) {
 			RESTART_THE_BEAT = false;
+			print ("Restarting the beat from update");
 			StartCoroutine (SpawnSynthWavesLevel_01 ());
 		}
 		if(!song.isPlaying && !gc.isGameOver() && NEED_NEW_LVL && !pB.GameIsPaused () && spawnWaveCount > 100) {
@@ -461,6 +462,7 @@ public class LevelScript_01 : MonoBehaviour {
 			lastTime = GetComponent<AudioSource> ().time;
 			yield return new WaitForSeconds (0);
 			if (!checkPlayerProgressInLvl (true)) {
+				print ("inside spawnKeyWaves Rythmn count = " + rythmnCount);
 				if (rythmnCount == 5) {
 					RESTART_THE_BEAT = true;
 				}

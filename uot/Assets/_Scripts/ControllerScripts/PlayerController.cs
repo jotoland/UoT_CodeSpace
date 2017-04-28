@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour {
 			MOBILE_INPUT_ENABLED = true;
 			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
 		} else {
-			print ("cannot find virtual controls, Is mobile input enabled?");
+			//print ("cannot find virtual controls, Is mobile input enabled?");
 		}
 
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour {
 				GetComponent<AudioSource> ().Play ();
 				gameController.AddMissiles (missileShot);
 			}
-		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") && MOBILE_INPUT_ENABLED){
+		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") /* && MOBILE_INPUT_ENABLED*/){
 			JIMAGE.sprite = joyStickSprite;
 		}
 
