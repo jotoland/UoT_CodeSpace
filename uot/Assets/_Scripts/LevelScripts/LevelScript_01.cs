@@ -16,6 +16,7 @@ public class LevelScript_01 : MonoBehaviour {
 	public int spawnX;
 	private int spawnWaveCount;
 	private bool isThisObjectScaling;
+	private GameObject shipList;
 
 	#region Level_01 GameObject[] Vars
 	public GameObject[] powerUpBox_01;
@@ -76,6 +77,9 @@ public class LevelScript_01 : MonoBehaviour {
 		SPAWN_POWERUP = true;
 		NEED_NEW_LVL = true;
 
+		shipList = GameObject.Find ("ShipList");
+
+
 		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
 		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
 
@@ -126,10 +130,12 @@ public class LevelScript_01 : MonoBehaviour {
 		}
 		if (RESTART_THE_BEAT) {
 			RESTART_THE_BEAT = false;
+			print ("Restarting the beat from update");
 			StartCoroutine (SpawnSynthWavesLevel_01 ());
 		}
 		if(!song.isPlaying && !gc.isGameOver() && NEED_NEW_LVL && !pB.GameIsPaused () && spawnWaveCount > 100) {
 			NEED_NEW_LVL = false;
+			shipList.GetComponent<AnimationScript> ().playExitAni ();
 			StartCoroutine(LoadNewLvl());
 		}
 		if(!pB.GameIsPaused() && gc.isGameOver()){
@@ -152,7 +158,7 @@ public class LevelScript_01 : MonoBehaviour {
 
 	IEnumerator LoadNewLvl(){
 		gc.levelCompleted ();
-		yield return new WaitForSeconds (3);
+		yield return new WaitForSeconds (6);
 		print("[LoadNewLvl_Level_01Script] levelCount = " + gc.getLvlCount ());
 		//level count + 3 (compensation for the login scene and player seleciton scene)
 		//SceneManager.LoadScene (gc.getLvlCount()+3);
@@ -461,6 +467,7 @@ public class LevelScript_01 : MonoBehaviour {
 			lastTime = GetComponent<AudioSource> ().time;
 			yield return new WaitForSeconds (0);
 			if (!checkPlayerProgressInLvl (true)) {
+				print ("inside spawnKeyWaves Rythmn count = " + rythmnCount);
 				if (rythmnCount == 5) {
 					RESTART_THE_BEAT = true;
 				}
