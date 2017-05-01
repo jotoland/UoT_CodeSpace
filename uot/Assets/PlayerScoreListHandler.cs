@@ -9,6 +9,8 @@ public class PlayerScoreListHandler : MonoBehaviour {
 	ScoreManager man;
 	int lastChangeCounter;
 	// Use this for initialization
+
+
 	void Start () {
 		man = GameObject.Find("ScoreManager").GetComponent<ScoreManager> ();
 		lastChangeCounter = man.GetChangeCounter ();
@@ -23,8 +25,9 @@ public class PlayerScoreListHandler : MonoBehaviour {
 		lastChangeCounter = man.GetChangeCounter ();
 
 		while (this.transform.childCount > 0) {
-			Transform c = this.transform.GetChild (0);
-			c.SetParent (null);
+			Transform t = this.transform.GetChild (0);
+			GameObject c = this.transform.GetChild (0).gameObject;
+			t.SetParent (null);
 			Destroy (c);
 		}
 
@@ -39,4 +42,10 @@ public class PlayerScoreListHandler : MonoBehaviour {
 			go.transform.Find ("Points").GetComponent<Text> ().text = man.GetScore (name, "Points").ToString ();
 		}
 	}
+
+	void OnDisable(){
+
+	}
 }
+
+

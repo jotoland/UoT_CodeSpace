@@ -7,49 +7,20 @@ public class ScoreManager : MonoBehaviour {
 
 	int changeCounter = 0;
 	Dictionary<string, Dictionary<string, int> > playerScores;
+	private string[] records;
+	private string[] items;
+	private string[] username;
+
+	private int[] points;
+	private int[] rupees;
+	private int[] lives;
 
 	void Awake(){
 		
 	}
 	// Use this for initialization
 	void Start () {
-		SetScore ("jack", "Points", 9001);
-		SetScore ("jack", "Lives", 9);
-		SetScore ("jack", "Rupees", 42000); 
-		SetScore ("bob", "Points", 1);
-		SetScore ("bob", "Lives", 3);
-		SetScore ("bob", "Rupees", 76989); 
-		SetScore ("tim", "Points", 98);
-		SetScore ("tim", "Lives", 4);
-		SetScore ("tim", "Rupees", 0); 
-		SetScore ("AAA", "Rupees", 0); 
-		SetScore ("BBB", "Rupees", 0); 
-		SetScore ("CCC", "Rupees", 0);
-		SetScore ("jac", "Points", 9001);
-		SetScore ("jac", "Lives", 9);
-		SetScore ("jac", "Rupees", 42000); 
-		SetScore ("bo", "Points", 1);
-		SetScore ("bo", "Lives", 3);
-		SetScore ("bo", "Rupees", 76989); 
-		SetScore ("ti", "Points", 98);
-		SetScore ("ti", "Lives", 4);
-		SetScore ("ti", "Rupees", 0); 
-		SetScore ("AA", "Rupees", 0); 
-		SetScore ("BB", "Rupees", 0); 
-		SetScore ("CC", "Rupees", 0);
-		SetScore ("ja", "Points", 9001);
-		SetScore ("ja", "Lives", 9);
-		SetScore ("ja", "Rupees", 42000); 
-		SetScore ("b", "Points", 1);
-		SetScore ("b", "Lives", 3);
-		SetScore ("b", "Rupees", 76989); 
-		SetScore ("t", "Points", 98);
-		SetScore ("t", "Lives", 4);
-		SetScore ("t", "Rupees", 0); 
-
-
-		print(GetScore ("jack", "Kills"));
-		//playerScores ["johnny5"] = new Dictionary<string, int> ();
+		
 	}
 
 	void Init(){
@@ -101,12 +72,97 @@ public class ScoreManager : MonoBehaviour {
 		Init ();
 		return playerScores.Keys.OrderByDescending (n => GetScore (n, sortingScoreType)).ToArray ();
 	}
-
-	public void DEBUG_ADD_KILL_TO_JACK(){
-		ChangeScore ("jack", "Points", 1);
-	}
+		
 
 	public int GetChangeCounter(){
 		return changeCounter;
 	}
+
+	public void ClearChangeCounter(){
+		this.changeCounter = 0;
+	}
+
+	public IEnumerator GetDataCo(string userName) {
+
+		string getDataUrl = "https://tempusfugit.000webhostapp.com/usrAc/getHSAc.php";
+
+		WWWForm itemsData = new WWWForm ();
+		itemsData.AddField ("mUserName", userName);
+		itemsData.AddField ("dbServerName", "localhost");
+		itemsData.AddField ("dbUserName", "id917361_johnny5isalive");
+		itemsData.AddField ("dbPassword","crappy");
+		itemsData.AddField ("dbName","id917361_uot");
+
+		WWW getData = new WWW (getDataUrl, itemsData);
+
+		yield return getData;
+
+		string itemsDataStr = getData.text;
+		//print ("Getting the HS: " +itemsDataStr);
+
+		records = itemsDataStr.Split ('*');
+		username = new string[records.Length];
+		points = new int[records.Length];
+		rupees = new int[records.Length];
+		lives = new int[records.Length];
+		int i = 0;
+
+		foreach (string rec in records) {
+			print (rec);
+			if (i > 0) {
+				items = rec.Split ('|');
+				int j = 0;
+				foreach (string it in items) {
+					print (it);
+					if (j > 0) {
+						if (j == 1) {
+							username [i - 1] = GetDataValue (it, "UserName:");
+							//print (username [i -1]);
+						} else if (j == 2) {
+							points [i - 1] = int.Parse (GetDataValue (it, "Points:"));
+							//print (points [i-1]);
+						} else if (j == 3) {
+							rupees [i - 1] = int.Parse (GetDataValue (it, "Rupees:"));
+							//print (rupees [i-1]);
+						} else if(j == 4) {
+							lives [i-1] = int.Parse (GetDataValue (it, "Lives:"));
+							//print (lives [i-1]);
+						}
+					}
+					j++;
+				}
+			}
+			i++;
+		}
+		int maxScoreBoardLength;
+		if (username.Length-1> 15) {
+			maxScoreBoardLength = 15;
+		} else {
+			maxScoreBoardLength = username.Length - 1;
+		}
+		for(int k = 0; k<maxScoreBoardLength; k++){
+			SetScore (username[k], "Points", points[k]);
+			SetScore (username[k], "Rupees", rupees[k]);
+			SetScore (username[k], "Lives", lives[k]);
+			/*
+			print ("username [" + k + "]= " + username [k]);
+			print ("points [" + k + "]= " + points [k]);
+			print ("rupees [" + k + "]= " + rupees [k]);
+			print ("lives [" + k + "]= " + lives [k]);
+			*/
+		}
+	}
+
+	//input is the data string and this method splits it appart
+	string GetDataValue(string data, string index){
+		string value = data.Substring (data.IndexOf(index)+index.Length);
+		if(value.Contains("|"))value = value.Remove (value.IndexOf ("|"));
+		return value;
+	}
+		
+	void OnEnable(){
+		StartCoroutine (GetDataCo (PlayerPrefs.GetString ("mUsername")));
+	}
+		
 }
+//finito
