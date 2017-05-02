@@ -78,6 +78,10 @@ public class CoRoutines : MonoBehaviour {
 		//sends messages to PHP script
 		WWWForm form = new WWWForm ();
 		form.AddField("mConnection", "johnny5");
+		form.AddField ("dbServerName", "localhost");
+		form.AddField ("dbUserName", "id917361_johnny5isalive");
+		form.AddField ("dbPassword","crappy");
+		form.AddField ("dbName","id917361_uot");
 
 		WWW CCWWW = new WWW (CCAccountUrl, form);
 
@@ -107,6 +111,10 @@ public class CoRoutines : MonoBehaviour {
 		form.AddField ("mUserName", userName);
 		form.AddField ("mCurrentLvl", lvl);
 		form.AddField ("mCurrentShip", index);
+		form.AddField ("dbServerName", "localhost");
+		form.AddField ("dbUserName", "id917361_johnny5isalive");
+		form.AddField ("dbPassword","crappy");
+		form.AddField ("dbName","id917361_uot");
 
 		WWW updateAccountWWW = new WWW (updateAccountUrl, form);
 
@@ -130,6 +138,10 @@ public class CoRoutines : MonoBehaviour {
 
 		WWWForm itemsData = new WWWForm ();
 		itemsData.AddField ("mUserName", userName);
+		itemsData.AddField ("dbServerName", "localhost");
+		itemsData.AddField ("dbUserName", "id917361_johnny5isalive");
+		itemsData.AddField ("dbPassword","crappy");
+		itemsData.AddField ("dbName","id917361_uot");
 
 		WWW getData = new WWW (getDataUrl, itemsData);
 
@@ -169,6 +181,10 @@ public class CoRoutines : MonoBehaviour {
 		//variables being sent
 		form.AddField ("mUserName", cUserName);
 		form.AddField ("Password", cPassword);
+		form.AddField ("dbServerName", "localhost");
+		form.AddField ("dbUserName", "id917361_johnny5isalive");
+		form.AddField ("dbPassword","crappy");
+		form.AddField ("dbName","id917361_uot");
 
 		WWW createAccountWWW = new WWW (createAccountUrl, form);
 
@@ -196,6 +212,10 @@ public class CoRoutines : MonoBehaviour {
 
 		form.AddField ("mUserName", userName);
 		form.AddField ("Password", password);
+		form.AddField ("dbServerName", "localhost");
+		form.AddField ("dbUserName", "id917361_johnny5isalive");
+		form.AddField ("dbPassword","crappy");
+		form.AddField ("dbName","id917361_uot");
 
 		WWW LoginAccountWWW = new WWW (loginUrl, form);
 
@@ -243,6 +263,10 @@ public class CoRoutines : MonoBehaviour {
 		form.AddField ("mUserName", userName);
 		form.AddField ("mCurrentData", data);
 		form.AddField ("mDataID", dataID);
+		form.AddField ("dbServerName", "localhost");
+		form.AddField ("dbUserName", "id917361_johnny5isalive");
+		form.AddField ("dbPassword","crappy");
+		form.AddField ("dbName","id917361_uot");
 
 		WWW updateAccountWWW = new WWW (updateAccountUrl, form);
 
