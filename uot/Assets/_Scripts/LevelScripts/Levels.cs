@@ -37,6 +37,8 @@ public class Levels : MonoBehaviour
 	public Scene currentScene;
     public GameObject Boss4;
 	public GameObject explosion;
+	private GameObject shipList;
+
 
 
     // Use this for initialization
@@ -56,6 +58,8 @@ public class Levels : MonoBehaviour
             gc = gcObject.GetComponent<GameController>();
         }
 		currentScene = SceneManager.GetActiveScene();
+		shipList = GameObject.Find ("ShipList");
+
 
 
     }
@@ -121,6 +125,9 @@ public class Levels : MonoBehaviour
 				gc.setPlayerDead (false);
 				return true;
 			} else if (spawnWaveCount == numOfWavesInLvl + 1 && !gc.isGameOver () && currentScene.name != "Level_04") {
+				if (currentScene.name == "Level_03") {
+					shipList.GetComponent<AnimationScript> ().playExitAni ();
+				}
 				StartCoroutine (LoadNewLvl ());
 				return false;
 			} else if (pNG.isLEFT_SCENE ()) {

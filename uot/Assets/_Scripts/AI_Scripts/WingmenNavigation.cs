@@ -22,9 +22,9 @@ public class WingmenNavigation : MonoBehaviour {
 		if (player) {
 			if (player) {
 				if (navMeshAgent.tag == "WingMan1") {
-					navMeshAgent.destination = player.transform.position + transform.right * 3;
+					navMeshAgent.destination = player.transform.position + transform.right * 5;
 				} else {
-					navMeshAgent.destination = player.transform.position + transform.right*(-3);
+					navMeshAgent.destination = player.transform.position + transform.right*(-5);
 				}
 			}
 			GameObject enemy = GameObject.FindGameObjectWithTag ("Enemy");
