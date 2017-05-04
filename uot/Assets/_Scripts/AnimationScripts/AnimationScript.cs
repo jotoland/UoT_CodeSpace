@@ -23,7 +23,11 @@ public class AnimationScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		curScene = SceneManager.GetActiveScene ();
+
 		if (curScene.name.Equals ("Level_01")) {
+
+		if (curScene.name.Equals ("Level_01") || curScene.name.Equals ("Level_03")) {
+
 			print ("level one ani play");
 			shipList = new GameObject[transform.childCount];
 			for(int i =0; i<transform.childCount-2; i++){
@@ -38,7 +42,7 @@ public class AnimationScript : MonoBehaviour {
 			StartCoroutine (EnableControls());
 		}
 	}
-
+	}
 	public void playExitAni(){
 		playExit = true;
 		/*
