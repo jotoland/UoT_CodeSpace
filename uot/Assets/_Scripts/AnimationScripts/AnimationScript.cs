@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/* John G. Toland 5/2/17
+ * This script will handle the animation play. 
+ * */
 public class AnimationScript : MonoBehaviour {
 
 	private Scene curScene;
