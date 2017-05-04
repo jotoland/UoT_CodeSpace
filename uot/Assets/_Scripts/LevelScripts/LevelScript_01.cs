@@ -135,6 +135,7 @@ public class LevelScript_01 : MonoBehaviour {
 		}
 		if(!song.isPlaying && !gc.isGameOver() && NEED_NEW_LVL && !pB.GameIsPaused () && spawnWaveCount > 100) {
 			NEED_NEW_LVL = false;
+			//GameObject.FindGameObjectWithTag ("Player").GetComponent <PlayerController> ().enabled = false;
 			shipList.GetComponent<AnimationScript> ().playExitAni ();
 			StartCoroutine(LoadNewLvl());
 		}

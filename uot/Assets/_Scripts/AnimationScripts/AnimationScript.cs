@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+/* John G. Toland 5/2/17
+ * This script will handle the animation play. 
+ * */
 public class AnimationScript : MonoBehaviour {
 
 	private Scene curScene;
@@ -23,7 +25,7 @@ public class AnimationScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		curScene = SceneManager.GetActiveScene ();
-		if (curScene.name.Equals ("Level_01")) {
+		if (curScene.name.Equals ("Level_01") || curScene.name.Equals ("Level_03")) {
 			print ("level one ani play");
 			shipList = new GameObject[transform.childCount];
 			for(int i =0; i<transform.childCount-2; i++){
@@ -40,29 +42,40 @@ public class AnimationScript : MonoBehaviour {
 	}
 
 	public void playExitAni(){
-		bound.SetActive (false);
-		for(int i =0; i<shipList.Length-2; i++){
-			pCon = shipList [i].GetComponent<PlayerController> ();
-			pCon.enabled = false;
+		playExit = true;
+		/*
+		Vector3 origin = new Vector3 (0.0f, 0.0f, 0.0f);
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		player.GetComponent<PlayerController> ().enabled = false;
+		player.transform.position = origin;
+		if (player.transform.position != origin) {
+			player.transform.position = origin;
 		}
+		bound.SetActive (false);
 		transform.GetChild(shipList.Length-1).gameObject.SetActive (true);
 		aniPlay.enabled = true;
 		aniPlay.SetTrigger ("GameWon");
+		*/
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if (playExit) {
 			playExit = false;
-			for(int i =0; i<shipList.Length-2; i++){
-				pCon = shipList [i].GetComponent<PlayerController> ();
-				pCon.enabled = false;
+			Vector3 origin = new Vector3 (0.0f, 0.0f, 0.0f);
+			GameObject player = GameObject.FindGameObjectWithTag ("Player");
+			player.GetComponent <Rigidbody> ().velocity = origin;
+		
+			player.GetComponent<PlayerController> ().enabled = false;
+			player.transform.position = origin;
+			if (player.transform.position != origin) {
+				player.transform.position = origin;
 			}
+			bound.SetActive (false);
 			transform.GetChild(shipList.Length-1).gameObject.SetActive (true);
 			aniPlay.enabled = true;
 			aniPlay.SetTrigger ("GameWon");
 		}
-		
 	}
 
 	IEnumerator EnableControls(){
