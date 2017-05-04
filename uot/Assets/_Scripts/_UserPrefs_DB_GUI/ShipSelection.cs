@@ -104,5 +104,16 @@ public class ShipSelection : MonoBehaviour {
 	}
 	#endregion
 
+	public void ExitBtn(){
+		Application.Quit ();
+		StopEditorPlayback ();
+	}
+
+	void StopEditorPlayback(){
+		#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+		#endif
+	}
+
 }
 //finito
