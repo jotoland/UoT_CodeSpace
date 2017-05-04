@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
+/* John G. Toland 05/2/17
+ * This script is used as a local database that takes the information from the MySQL database
+ * and pulls it apart and stores it in the Dictionary.
+ * This script is used by the PlayerSocreListHandler to populate its game objects with data
+ * */
 public class ScoreManager : MonoBehaviour {
 
 	int changeCounter = 0;
