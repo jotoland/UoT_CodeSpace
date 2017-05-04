@@ -14,6 +14,7 @@ public class PauseNavGUI: MonoBehaviour {
 	public GameObject pauseBtn;
 	public GameObject NavMenu;
 	public GameObject AudioMenu;
+	public GameObject highScoreBoard;
 	public bool PAUSE_BTN_ENABLED;
 	private bool GAME_IS_PAUSED;
 	public bool AUDIO_MUTED;
@@ -24,10 +25,11 @@ public class PauseNavGUI: MonoBehaviour {
 	private string username;
 	private bool LEFT_SCENE;
 	private GameObject Menu;
+	public GameObject scoreList;
+	public ScoreManager man;
 
 	// Use this for initialization
 	void Start () {
-		
 		LEFT_SCENE = false;
 		LOOKING_4GAMEOVER = true;
 		AUDIO_MUTED = false;
@@ -35,6 +37,7 @@ public class PauseNavGUI: MonoBehaviour {
 		PAUSE_BTN_ENABLED = false;
 		NavMenu.SetActive (false);
 		AudioMenu.SetActive (false);
+		highScoreBoard.SetActive (false);
 
 		StartCoroutine (ActivatePauseBtn ());
 
@@ -73,6 +76,20 @@ public class PauseNavGUI: MonoBehaviour {
 		AudioListener.pause = false;
 	}
 
+	public void ScoreBoardResumeBtn(){
+		while (scoreList.transform.childCount > 0) {
+			GameObject c = scoreList.transform.GetChild (0).gameObject;
+			Transform t = c.transform;
+			t.SetParent (null);
+			Destroy (c);
+		}
+		man.ClearChangeCounter ();
+		highScoreBoard.SetActive (false);
+		GAME_IS_PAUSED = false;
+		Time.timeScale = 1;
+		AudioListener.pause = false;
+	}
+
 	public void ExitBtn(){
 		Application.Quit ();
 		StopEditorPlayback ();
@@ -101,6 +118,24 @@ public class PauseNavGUI: MonoBehaviour {
 		AudioMenu.SetActive (true);
 	}
 
+	public void ScoreBoardBtn(){
+		NavMenu.SetActive (false);
+		highScoreBoard.SetActive (true);
+	}
+
+	public void ScoreBoardBackButton(){
+		while (scoreList.transform.childCount > 0) {
+			GameObject c = scoreList.transform.GetChild (0).gameObject;
+			Transform t = c.transform;
+			t.SetParent (null);
+			Destroy (c);
+		}
+		man.ClearChangeCounter ();
+		highScoreBoard.SetActive (false);
+		NavMenu.SetActive (true);
+
+	}
+
 	public void BackBtn(){
 		AudioMenu.SetActive (false);
 		NavMenu.SetActive (true);
@@ -119,6 +154,7 @@ public class PauseNavGUI: MonoBehaviour {
 
 	public void ShipSelectionBtn(){
 		CoRo.UpdateData (username, 1, "lvl");
+		DestroyClones();
 		LEFT_SCENE = true;
 		Time.timeScale = 1;
 		GAME_IS_PAUSED = false;
@@ -130,6 +166,7 @@ public class PauseNavGUI: MonoBehaviour {
 
 	public void LevelSelectionBtn(){
 		CoRo.UpdateData (username, 9, "lvl");
+		DestroyClones ();
 		LEFT_SCENE = true;
 		Time.timeScale = 1;
 		GAME_IS_PAUSED = false;
@@ -155,6 +192,15 @@ public class PauseNavGUI: MonoBehaviour {
 
 	public void setLEFT_SCENE(bool leftScene){
 		LEFT_SCENE = leftScene;
+	}
+
+	private void DestroyClones(){
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		player.GetComponent<Collider> ().enabled = false;
+		GameObject[] clones = GameObject.FindGameObjectsWithTag ("Enemy");
+		foreach (GameObject go in clones) {
+			Destroy (go);
+		}
 	}
 		
 }
