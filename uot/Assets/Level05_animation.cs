@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//CReated by Richard O'Neal 5/4/2017
+//Created by Richard O'Neal 5/4/2017
 public class Level05_animation : MonoBehaviour {
 	
 	private GameObject[] shipList;
@@ -14,10 +14,10 @@ public class Level05_animation : MonoBehaviour {
 		boundary = GameObject.Find ("Boundary");
 		boundary.SetActive (false);
 		shipList = new GameObject[transform.childCount];
-		for(int i =0; i<transform.childCount-2; i++){
+		for(int i =0; i<transform.childCount-1; i++){
 			shipList [i] = transform.GetChild (i).gameObject;
 		}
-		for(int i =0; i<shipList.Length-2; i++){
+		for(int i =0; i<shipList.Length-1; i++){
 			shipControl = shipList [i].GetComponent<PlayerController> ();
 			shipControl.enabled = false;
 		}
@@ -38,6 +38,6 @@ public class Level05_animation : MonoBehaviour {
 		}
 		// Code to execute after the delay
 	}
-	// Update is called once per frame
+
 
 }
