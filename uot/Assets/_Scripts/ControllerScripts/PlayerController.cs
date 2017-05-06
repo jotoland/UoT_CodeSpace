@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 // John G. Toland 4/10/17 Updated the contorls for CrossPlatformInput 
 // also added the toggleing of collider and mesh renderer which is called from ReSpawn() in GC
 //
@@ -39,18 +40,22 @@ public class PlayerController : MonoBehaviour {
 	private GameObject virtualControls;
 	private bool MOBILE_INPUT_ENABLED;
 
+
 	public void setCAN_FIRE(bool canIt){
 		CAN_FIRE = canIt;
 	}
 
+
+
 	void Start () {
+		
 		MOBILE_INPUT_ENABLED = false;
 		virtualControls = GameObject.Find ("VirtualControls");
 		if (virtualControls.transform.FindChild ("MobileJoystick").gameObject.activeInHierarchy) {
 			MOBILE_INPUT_ENABLED = true;
 			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
 		} else {
-			print ("cannot find virtual controls, Is mobile input enabled?");
+			//print ("cannot find virtual controls, Is mobile input enabled?");
 		}
 
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");	//Finding game object that holds gamecontroller script
@@ -72,6 +77,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Update ()
 	{
+		
 		//if mouse button is pressed instantiate the bolt and play shooting sound
 		if (CrossPlatformInputManager.GetButton ("Fire1") && Time.time > nextFire && CAN_FIRE) {
 			if (MOBILE_INPUT_ENABLED) {
@@ -138,7 +144,7 @@ public class PlayerController : MonoBehaviour {
 				GetComponent<AudioSource> ().Play ();
 				gameController.AddMissiles (missileShot);
 			}
-		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") && MOBILE_INPUT_ENABLED){
+		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") /* && MOBILE_INPUT_ENABLED*/){
 			JIMAGE.sprite = joyStickSprite;
 		}
 

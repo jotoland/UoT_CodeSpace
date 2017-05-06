@@ -18,6 +18,8 @@ public class Login : MonoBehaviour {
 	public GameObject Register;
 	public GameObject CreateAccountBtn;
 	public GameObject passwordInputField;
+	public Text muteAudioBtn;
+	private bool AUDIO_MUTE = false;
 
 	private string USERNAME;
 	private string PASSWORD;
@@ -120,6 +122,18 @@ public class Login : MonoBehaviour {
 
 	public String getUserName(){
 		return USERNAME;
+	}
+
+	public void muteAudio(){
+		if (AUDIO_MUTE) {
+			AudioListener.pause = false;
+			muteAudioBtn.GetComponent<Text> ().text = "Mute Audio";
+			AUDIO_MUTE = false;
+		} else {
+			AUDIO_MUTE = true;
+			AudioListener.pause = true;
+			muteAudioBtn.GetComponent<Text> ().text = "UnMute";
+		}
 	}
 }
 //finito
