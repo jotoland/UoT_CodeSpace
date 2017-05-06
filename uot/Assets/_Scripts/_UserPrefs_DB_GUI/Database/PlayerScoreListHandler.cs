@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/* John G. Toland 5/2/17
+ * This script will populate the score board with game objects
+ * */
 public class PlayerScoreListHandler : MonoBehaviour {
 
 	public GameObject entry;
