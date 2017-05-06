@@ -255,7 +255,6 @@ public class Levels : MonoBehaviour
 			yield return new WaitForSeconds (1f);
 			checkPlayerProgressInLvl (false);
 			float bossHealth = BossClone.GetComponent < Level_4_Boss_health >().CurrentHealth;
-			print ("Boss Health = " + bossHealth);
 			if (!gc.isGameOver () && bossHealth <= 0.0f) {
 				yield return new WaitForSeconds (0.8f);
 				// adding Richards explosion thanks Rich!! this is a good asset.

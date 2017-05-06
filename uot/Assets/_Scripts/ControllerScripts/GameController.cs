@@ -204,7 +204,7 @@ public class GameController : MonoBehaviour {
 		print("currentship = " + currentShip);
 		print ("currentScene = " + currentScene.name);
 		//just for level_01!!!
-		if (currentScene.name == "Level_01" || currentScene.name == "Level_04") {
+		if (currentScene.name == "Level_01" /*|| currentScene.name == "Level_04"*/) {
 			print ("respawing player");
 			Instantiate (shipList [shipList.Length - 1], spawnPlayer.position, spawnPlayer.rotation);
 			Instantiate (shipList [currentShip], spawnPlayer.position, spawnPlayer.rotation);
