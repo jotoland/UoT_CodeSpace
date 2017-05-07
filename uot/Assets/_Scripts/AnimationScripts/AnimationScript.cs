@@ -25,7 +25,7 @@ public class AnimationScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		curScene = SceneManager.GetActiveScene ();
-		if (curScene.name.Equals ("Level_01") || curScene.name.Equals ("Level_03") || curScene.name.Equals("Level_02")) {
+		if (curScene.name.Equals ("Level_01") || curScene.name.Equals ("Level_03") || curScene.name.Equals("Level_02") || curScene.name.Equals("Level_04")) {
 			print ("level one ani play");
 			shipList = new GameObject[transform.childCount];
 			for(int i =0; i<transform.childCount-2; i++){
