@@ -20,6 +20,7 @@ public class Levels : MonoBehaviour
 {
     //all level variables
 	private SceneLoaderHandler SLH;
+    private PlayerController pc;
     private GameController gc;
     public GameObject[] hazards;
     public Vector3 spawnValues;
@@ -60,7 +61,11 @@ public class Levels : MonoBehaviour
 		currentScene = SceneManager.GetActiveScene();
 		shipList = GameObject.Find ("ShipList");
 
-
+        GameObject pcObject = GameObject.FindGameObjectWithTag("Player");
+        if(pcObject != null)
+        {
+            pc = pcObject.GetComponent<PlayerController>();
+        }
 
     }
 
@@ -252,6 +257,7 @@ public class Levels : MonoBehaviour
     IEnumerator SpawnBoss4()
     {
         yield return new WaitForSeconds(startWait);
+        pc.numberOfSpawns = 0;
 		Vector3 spawnPosition = new Vector3(0, spawnValues.y, spawnValues.z);
 		Instantiate(Boss4, spawnPosition, this.gameObject.transform.rotation);
 		GameObject BossClone = GameObject.Find ("Level_4_Boss(Clone)");
