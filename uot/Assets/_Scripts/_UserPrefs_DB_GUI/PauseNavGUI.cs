@@ -196,7 +196,10 @@ public class PauseNavGUI: MonoBehaviour {
 
 	private void DestroyClones(){
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		player.GetComponent<Collider> ().enabled = false;
+		if (player) {
+			print ("disabling collider");
+			player.GetComponent<Collider> ().enabled = false;
+		}
 		GameObject[] clones = GameObject.FindGameObjectsWithTag ("Enemy");
 		foreach (GameObject go in clones) {
 			Destroy (go);

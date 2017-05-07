@@ -39,6 +39,10 @@ public class PlayerController : MonoBehaviour {
 	private Image JIMAGE;
 	private GameObject virtualControls;
 	private bool MOBILE_INPUT_ENABLED;
+	private Scene curScene;
+	private Transform missileTrans;
+	private GameObject missileBtn;
+	private Image missileImage;
 
 
 	public void setCAN_FIRE(bool canIt){
@@ -48,12 +52,26 @@ public class PlayerController : MonoBehaviour {
 
 
 	void Start () {
-		
+		curScene = SceneManager.GetActiveScene ();
 		MOBILE_INPUT_ENABLED = false;
 		virtualControls = GameObject.Find ("VirtualControls");
 		if (virtualControls.transform.FindChild ("MobileJoystick").gameObject.activeInHierarchy) {
 			MOBILE_INPUT_ENABLED = true;
+			if (virtualControls.transform.childCount > 1) {
+				missileTrans = virtualControls.transform.GetChild (1);
+				missileBtn = virtualControls.transform.GetChild (1).gameObject;
+				missileBtn.SetActive (false);
+			}
 			JIMAGE = GameObject.Find ("MobileJoystick").GetComponent<Image> ();
+			if (curScene.name.Equals ("Level_05")) {
+				missileBtn.SetActive (true);
+				missileImage = missileBtn.GetComponent<Image> ();
+			} else {
+				if (virtualControls.transform.childCount > 1) {
+					missileTrans.SetParent (null);
+					Destroy (missileBtn);
+				}
+			}
 		} else {
 			//print ("cannot find virtual controls, Is mobile input enabled?");
 		}
@@ -77,7 +95,16 @@ public class PlayerController : MonoBehaviour {
 
 	void Update ()
 	{
-		
+		if ( curScene.name.Equals ("Level_05") && MOBILE_INPUT_ENABLED) {
+			if (missileImage.color.a == 0) {
+				missileImage.color = new Color (missileImage.color.g, missileImage.color.b, 1);
+			}
+			if (gameController.getMissleCount () > 0 && missileImage.enabled ==  false) {
+				missileImage.enabled = true;
+			} else if(gameController.getMissleCount () == 0 && missileImage.enabled ==  true){
+				missileImage.enabled = false;
+			}
+		} 
 		//if mouse button is pressed instantiate the bolt and play shooting sound
 		if (CrossPlatformInputManager.GetButton ("Fire1") && Time.time > nextFire && CAN_FIRE) {
 			if (MOBILE_INPUT_ENABLED) {
@@ -128,14 +155,12 @@ public class PlayerController : MonoBehaviour {
 				Instantiate (shot, shotSpawns [0].position, shotSpawns [0].rotation);
 				break;
 			}	
-
 			GetComponent<AudioSource> ().Play ();
 		} else if(CrossPlatformInputManager.GetButtonUp ("Fire1") && MOBILE_INPUT_ENABLED) {
 			JIMAGE.sprite = joyStickSprite;
 		}
 		if (CrossPlatformInputManager.GetButton ("Fire2") && Time.time > nextMissile) {
 			nextMissile = Time.time + MissileCooldown;
-
 			//if the user has no missiles then cant fire missiles
 			if (gameController.getMissleCount () == 0) {
 				return;
@@ -144,10 +169,7 @@ public class PlayerController : MonoBehaviour {
 				GetComponent<AudioSource> ().Play ();
 				gameController.AddMissiles (missileShot);
 			}
-		} else if(CrossPlatformInputManager.GetButtonUp ("Fire2") /* && MOBILE_INPUT_ENABLED*/){
-			JIMAGE.sprite = joyStickSprite;
 		}
-
 	}
 
 	void FixedUpdate(){

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// Game controller.
 /// 
@@ -62,7 +63,9 @@ public class GameController : MonoBehaviour {
 	private int rupeeUpdateInterval;
 	private int scoreUpdateInterval;
 
+
 	void Start(){
+
 		GameObject SLHo = GameObject.Find ("JOHNS_NAV_GUI_MOBILE");
 		SLH = SLHo.GetComponent<SceneLoaderHandler> ();
 		//Making sure the audio is unpaused.
