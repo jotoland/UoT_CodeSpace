@@ -22,7 +22,7 @@ public class Comet_movement : MonoBehaviour {
     }
     void FixedUpdate()
     {
-        if(GetComponent<Rigidbody>().position.x < boundary.xMin-6)
+        if(GetComponent<Rigidbody>().position.x < boundary.xMin-5.5)
         {
             
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -31,7 +31,7 @@ public class Comet_movement : MonoBehaviour {
             GetComponent<Rigidbody>().velocity = (transform.forward * speed) + (transform.right * -1 * horizontal_speed);
             GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
         }
-        else if(GetComponent<Rigidbody>().position.x > boundary.xMax+6)
+        else if(GetComponent<Rigidbody>().position.x > boundary.xMax+5.5)
         {
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.identity;
